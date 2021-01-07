@@ -1,0 +1,59 @@
+-- MySQL dump 10.13  Distrib 5.7.28, for Linux (x86_64)
+--
+-- Host: localhost    Database: migranttrack
+-- ------------------------------------------------------
+-- Server version	5.7.28-0ubuntu0.19.04.2
+
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
+/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
+/*!40101 SET NAMES utf8 */;
+/*!40103 SET @OLD_TIME_ZONE=@@TIME_ZONE */;
+/*!40103 SET TIME_ZONE='+00:00' */;
+/*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;
+/*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
+/*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
+/*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
+
+--
+-- Table structure for table `district_users`
+--
+
+DROP TABLE IF EXISTS `district_users`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `district_users` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `district` int(11) NOT NULL,
+  `username` varchar(45) NOT NULL,
+  `password` varchar(360) DEFAULT NULL,
+  `active_status` varchar(2) NOT NULL DEFAULT 'N',
+  `created_on` datetime DEFAULT CURRENT_TIMESTAMP,
+  `password_reset` varchar(2) DEFAULT 'N',
+  `password_reset_on` datetime DEFAULT NULL,
+  `mobile` varchar(10) DEFAULT NULL,
+  `email` varchar(90) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=67 DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `district_users`
+--
+
+LOCK TABLES `district_users` WRITE;
+/*!40000 ALTER TABLE `district_users` DISABLE KEYS */;
+INSERT INTO `district_users` VALUES (1,616,'BaksA@616','CZW5UO94z0s=','Y','2020-05-26 18:30:56','N',NULL,'9864031778','dc-baksa@nic.in\n'),(2,280,'BarpetA@280','CZW5UO94z0s=','Y','2020-05-26 18:30:56','N',NULL,'9435064649','dc-barpeta@nic.in\n'),(3,705,'BiswanatH@705','CZW5UO94z0s=','Y','2020-05-26 18:30:56','N',NULL,'9435183744','dc-biswanath@gov.in\n'),(4,281,'BongaigaoN@281','CZW5UO94z0s=','Y','2020-05-26 18:30:56','N',NULL,'7099190324','dc-bongaigaon@nic.in\n'),(5,282,'CachaR@282','CZW5UO94z0s=','Y','2020-05-26 18:30:56','N',NULL,'9435080971','dc-cachar@nic.in\n'),(6,708,'CharaideO@708','CZW5UO94z0s=','Y','2020-05-26 18:30:56','N',NULL,'9435035657','dc-charaideo@nic.in\n'),(7,612,'ChiranG@612','CZW5UO94z0s=','Y','2020-05-26 18:30:56','N',NULL,'9864034681','dc-chirang@nic.in\n'),(8,283,'DarranG@283','CZW5UO94z0s=','Y','2020-05-26 18:30:56','N',NULL,'8132851222','dc-darrang@nic.in'),(9,284,'DhemajI@284','CZW5UO94z0s=','Y','2020-05-26 18:30:56','N',NULL,'7896276001','dc-dhemaji@nic.in\n'),(10,285,'DhubrI@285','CZW5UO94z0s=','Y','2020-05-26 18:30:56','N',NULL,'9435002981','dc-dhubri@nic.in\n'),(11,286,'DibrugarH@286','CZW5UO94z0s=','Y','2020-05-26 18:30:56','N',NULL,'6002062284','dc-dibrugarh@nic.in\n'),(12,299,'DimahasaO@299','CZW5UO94z0s=','Y','2020-05-26 18:30:56','N',NULL,'8133826806','dc-nchills@nic.in\n'),(13,287,'GoalparA@287','CZW5UO94z0s=','Y','2020-05-26 18:30:56','N',NULL,'9435043004','dc-goalpara@nic.in\n'),(14,288,'GolaghaT@288','CZW5UO94z0s=','Y','2020-05-26 18:30:56','N',NULL,'8811094057','dc-golaghat@nic.in\n'),(15,289,'HailakandI@289','CZW5UO94z0s=','Y','2020-05-26 18:30:56','N',NULL,'9953468140','dc-hailakandi@nic.in\n'),(16,709,'HojaI@709','CZW5UO94z0s=','Y','2020-05-26 18:30:56','N',NULL,'7086263111','dc-hojai@nic.in\n'),(17,290,'JorhaT@290','CZW5UO94z0s=','Y','2020-05-26 18:30:56','N',NULL,'9401083865','dc-jorhat@nic.in'),(18,291,'KamruP@291','CZW5UO94z0s=','Y','2020-05-26 18:30:56','N',NULL,'9435192130','dc-kamrup@nic.in\n'),(19,618,'KamrupmetrO@618','CZW5UO94z0s=','Y','2020-05-26 18:30:56','N',NULL,'8011215341','dc-kamrupm@nic.in\n'),(20,292,'KarbianglonG@292','CZW5UO94z0s=','Y','2020-05-26 18:30:56','N',NULL,'8472989998','dc-karbianglong@nic.in '),(21,293,'KarimganJ@293','CZW5UO94z0s=','Y','2020-05-26 18:30:56','N',NULL,'8826346765','dc-karimganj@nic.in'),(22,294,'KokrajhaR@294','CZW5UO94z0s=','Y','2020-05-26 18:30:56','N',NULL,'9957434343','dc-kokrajhar@nic.in'),(23,295,'LakhimpuR@295','CZW5UO94z0s=','Y','2020-05-26 18:30:56','N',NULL,'9954444333','dc-lakhimpur@nic.in '),(24,706,'MajulI@706','CZW5UO94z0s=','Y','2020-05-26 18:30:56','N',NULL,'9953032886','dc-majuli@nic.in\n'),(25,296,'MarigaoN@296','CZW5UO94z0s=','Y','2020-05-26 18:30:56','N',NULL,'9435060669','dc-morigaon@nic.in /'),(26,297,'NagaoN@297','CZW5UO94z0s=','Y','2020-05-26 18:30:56','N',NULL,'9435095180','dc-nagaon@nic.in'),(27,298,'NalbarI@298','CZW5UO94z0s=','Y','2020-05-26 18:30:56','N',NULL,'8399881208','dc-nalbari@nic.in\n'),(28,300,'SivasagaR@300','CZW5UO94z0s=','Y','2020-05-26 18:30:56','N',NULL,'9435133453','dc-sibsagar@nic.in\n'),(29,301,'SonitpuR@301','CZW5UO94z0s=','Y','2020-05-26 18:30:56','N',NULL,'9435020312','dc-sonitpur@nic.in'),(30,707,'SalmarA@707','CZW5UO94z0s=','Y','2020-05-26 18:30:56','N',NULL,'9435080970','dc-southsalmara@nic.in'),(31,302,'TinsukiA@302','CZW5UO94z0s=','Y','2020-05-26 18:30:56','N',NULL,'9435394147','dc-tinsukia@nic.in\n'),(32,617,'UdalgurI@617','CZW5UO94z0s=','Y','2020-05-26 18:30:56','N',NULL,'6901646641','dc-udalguri@nic.in\n'),(33,710,'WkarbianglonG@710','CZW5UO94z0s=','Y','2020-05-26 18:30:56','N',NULL,'9435156139',NULL),(34,616,'dis.616','CZW5UO94z0s=','Y','2020-05-26 18:30:56','N',NULL,'9864031778',NULL),(35,280,'dis.280','CZW5UO94z0s=','Y','2020-05-26 18:30:56','N',NULL,'9435064649',NULL),(36,705,'dis.705','CZW5UO94z0s=','Y','2020-05-26 18:30:56','N',NULL,'9435183744',NULL),(37,281,'dis.281','CZW5UO94z0s=','Y','2020-05-26 18:30:56','N',NULL,'7099190324',NULL),(38,282,'dis.282','CZW5UO94z0s=','Y','2020-05-26 18:30:56','N',NULL,'9435080971',NULL),(39,708,'dis.708','CZW5UO94z0s=','Y','2020-05-26 18:30:56','N',NULL,'9435035657',NULL),(40,612,'dis.612','CZW5UO94z0s=','Y','2020-05-26 18:30:56','N',NULL,'9864034681',NULL),(41,283,'dis.283','CZW5UO94z0s=','Y','2020-05-26 18:30:56','N',NULL,'8132851222',NULL),(42,284,'dis.284','CZW5UO94z0s=','Y','2020-05-26 18:30:56','N',NULL,'7896276001',NULL),(43,285,'dis.285','CZW5UO94z0s=','Y','2020-05-26 18:30:56','N',NULL,'9435002981',NULL),(44,286,'dis.286','CZW5UO94z0s=','Y','2020-05-26 18:30:56','N',NULL,'6002062284',NULL),(45,299,'dis.299','CZW5UO94z0s=','Y','2020-05-26 18:30:56','N',NULL,'8133826806',NULL),(46,287,'dis.287','CZW5UO94z0s=','Y','2020-05-26 18:30:56','N',NULL,'9435043004',NULL),(47,288,'dis.288','CZW5UO94z0s=','Y','2020-05-26 18:30:56','N',NULL,'8811094057',NULL),(48,289,'dis.289','CZW5UO94z0s=','Y','2020-05-26 18:30:56','N',NULL,'9953468140',NULL),(49,709,'dis.709','CZW5UO94z0s=','Y','2020-05-26 18:30:56','N',NULL,'7086263111',NULL),(50,290,'dis.290','CZW5UO94z0s=','Y','2020-05-26 18:30:56','N',NULL,'9401083865',NULL),(51,291,'dis.291','CZW5UO94z0s=','Y','2020-05-26 18:30:56','N',NULL,'9435192130',NULL),(52,618,'dis.618','CZW5UO94z0s=','Y','2020-05-26 18:30:56','N',NULL,'8011215341',NULL),(53,292,'dis.292','CZW5UO94z0s=','Y','2020-05-26 18:30:56','N',NULL,'8472989998',NULL),(54,293,'dis.293','CZW5UO94z0s=','Y','2020-05-26 18:30:56','N',NULL,'8826346765',NULL),(55,294,'dis.294','CZW5UO94z0s=','Y','2020-05-26 18:30:56','N',NULL,'9957434343',NULL),(56,295,'dis.295','CZW5UO94z0s=','Y','2020-05-26 18:30:56','N',NULL,'9954444333',NULL),(57,706,'dis.706','CZW5UO94z0s=','Y','2020-05-26 18:30:56','N',NULL,'9953032886',NULL),(58,296,'dis.296','CZW5UO94z0s=','Y','2020-05-26 18:30:56','N',NULL,'9435060669',NULL),(59,297,'dis.297','CZW5UO94z0s=','Y','2020-05-26 18:30:56','N',NULL,'9435095180',NULL),(60,298,'dis.298','CZW5UO94z0s=','Y','2020-05-26 18:30:56','N',NULL,'8399881208',NULL),(61,300,'dis.300','CZW5UO94z0s=','Y','2020-05-26 18:30:56','N',NULL,'9435133453',NULL),(62,301,'dis.301','CZW5UO94z0s=','Y','2020-05-26 18:30:56','N',NULL,'9435020312',NULL),(63,707,'dis.707','CZW5UO94z0s=','Y','2020-05-26 18:30:56','N',NULL,'9435080970',NULL),(64,302,'dis.302','CZW5UO94z0s=','Y','2020-05-26 18:30:56','N',NULL,'9435394147',NULL),(65,617,'dis.617','CZW5UO94z0s=','Y','2020-05-26 18:30:56','N',NULL,'6901646641',NULL),(66,710,'dis.710','CZW5UO94z0s=','Y','2020-05-26 18:30:56','N',NULL,'9435156139',NULL);
+/*!40000 ALTER TABLE `district_users` ENABLE KEYS */;
+UNLOCK TABLES;
+/*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
+
+/*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
+/*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
+/*!40014 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS */;
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
+/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
+/*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
+
+-- Dump completed on 2020-05-26 19:43:01

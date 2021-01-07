@@ -1,0 +1,213 @@
+<header th:fragment="header">
+	<div class="container-fluid text-white" style="background-color: #01458E;">
+		<div class="row h-25">
+			<div class="col-6 pt-2">
+				<h5 class="text-left text-white" style="letter-spacing: 2px;">Vet. CARES</h5>
+			</div>
+			<div class="col-6 text-right pt-2">
+				<a th:href="@{/home}" title="Home"> <i class="fa fa-home fa-lg text-white p-1"></i></a>
+				<a class="header-link" id="profile" data-toggle="popover" data-container="body" data-placement="bottom"
+					type="button" data-html="true" href="#"> <i class="fa fa-user-alt fa-lg text-white p-1"></i>
+				</a>
+			</div>
+			<div id="popover-content" style="display: none;">
+				<div class="col text-left px-0">
+					<span class="font-weight-bold">
+						<a href="#" title="Go to Profile" th:text="${session.userBean.name}">Username</a>
+					</span>
+				</div>
+				<hr class="mb-1">
+				<div class="row">
+					<div class="col mt-1 d-flex justify-content-between">
+						<div>
+							<a th:href="@{/login/updatePassword}" class="btn btn-sm btn-secondary" role="button">Update
+								Password</a>
+						</div>
+						<div class="pl-1">
+							<a th:href="@{/logout}" class="btn btn-sm btn-danger" role="button">Logout</a>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<!-- For Tab Listing -->
+		<div class="row">
+			<div class="col-11 header-part">
+				<div class="navbar-collapse">
+				
+				 <ul class="nav nav-tabs"
+                    	th:if='${session.userBean.userDomain!=null&&session.userBean.userDomain=="A"}'>
+                    	<!-- <li class="nav-item" title="Dashboard"><a
+							id="dashboard" class="nav-link"
+							th:classappend="${session.tab.equals('dashboard')} ? 'active' : ''"
+							th:href="@{/entry/getDashboard}">Dashboard</a></li> -->
+						<li class="nav-item" title="Entry"><a
+							id="entry" class="nav-link"
+							th:classappend="${session.tab.equals('applications')} ? 'active' : ''"
+							th:href="@{/admin/getApplicationDetailsForAdministration}">Farmer</a></li>
+						<li class="nav-item" title="Report"><a
+							id="report" class="nav-link"
+							th:classappend="${session.tab.equals('report')} ? 'active' : ''"
+							th:href="@{/report/getReports}">Report</a></li>
+						<li class="nav-item dropdown" title="Settings">
+                            <a id="settings" class="nav-link dropdown-toggle" 
+                            	th:classappend="${session.tab.equals('settings')} ? 'active' : ''"
+                            	data-toggle="dropdown">Settings</a>
+                            <div class="dropdown-menu">
+                                <a class="dropdown-item" th:href="@{/setup/getCarcassRateSetup}">Carcass Rate Setup</a>
+                                <a class="dropdown-item" th:href="@{/setup/getDistrictUserSetup}">District User Setup</a>
+                               <!-- <a class="dropdown-item" th:href="@{/setup/getInstitutionsSetup}">Quarantine Institutions</a>
+                                <a class="dropdown-item" th:href="@{/setup/getInstitutionUserSetup}">Quarantine Institutions User</a>
+                                <a class="dropdown-item" th:href="@{/setup/gotoLabSetup}">Testing Center</a> -->
+                            </div>
+						</li>
+						<!-- <li class="nav-item" title="Analytical Dashboard"><a
+							id="analytics" class="nav-link"
+							th:classappend="${session.tab.equals('analytics')} ? 'active' : ''"
+							th:href="@{/analytics}">Analytical Dashboard</a></li> -->
+                    </ul>
+                    
+				 <ul class="nav nav-tabs"
+                    	th:if='${session.userBean.userDomain!=null&&session.userBean.userDomain=="F"}'>
+						<li class="nav-item" title="Pending Transactions"><a
+							id="pendingT" class="nav-link"
+							th:classappend="${session.tab.equals('transactionPending')} ? 'active' : ''"
+							th:href="@{/finance/getNonInitiatedTransactionList}">Pending Transactions</a></li>
+							
+						<li class="nav-item" title="Initiated Transactions"><a
+							id="initiatedT" class="nav-link"
+							th:classappend="${session.tab.equals('transactionInitial')} ? 'active' : ''"
+							th:href="@{/finance/getInitiatedTransactionList}">Initiated Transactions</a></li>
+						<li class="nav-item" title="Report"><a
+							id="report" class="nav-link"
+							th:classappend="${session.tab.equals('transactionCompleted')} ? 'active' : ''"
+							th:href="@{/finance/getCompletedTransactionList}">Completed Transactions</a></li>
+                    </ul>
+					
+						<span th:if='${session.userBean.DVODEOUser!=null&&session.userBean.DVODEOUser=="Y"}'>
+						<ul class="nav nav-tabs" th:if='${session.userBean.userDomain!=null&&session.userBean.userDomain=="D"}'>
+								
+						<li class="nav-item"><a id="samples" class="nav-link"
+								th:classappend="${session.tab.equals('applicationDEOSubmitted')} ? 'active' : ''"
+								th:href="@{/district/getDistrictApplicationSubmittedDEOList}"
+								th:text="${'Applications'}">Application-DEO</a></li>	
+						</ul>	
+						</span>		
+						<span th:if='${session.userBean.DVOUser!=null&&session.userBean.DVOUser=="Y"}'>	
+						<ul class="nav nav-tabs" th:if='${session.userBean.userDomain!=null&&session.userBean.userDomain=="D"}'>	
+						
+
+						<li class="nav-item"><a id="samples" class="nav-link"
+								th:classappend="${session.tab.equals('dashboardDVO')} ? 'active' : ''"
+								th:href="@{/dashboard/gotoDashboardDVO}"
+								th:text="${'Dashboard'}">Dash board-DVO</a></li>
+								
+						<li class="nav-item"><a id="samples" class="nav-link"
+								th:classappend="${session.tab.equals('applicationDVO')} ? 'active' : ''"
+								th:href="@{/district/getDistrictApplicationForVerificationList}"
+								th:text="${'Verification Pending'}">Application Pending For Verification-DVO</a></li>
+						<li class="nav-item"><a id="samples" class="nav-link"
+								th:classappend="${session.tab.equals('applicationDVOVerified')} ? 'active' : ''"
+								th:href="@{/district/getDistrictApplicationVerifiedList}"
+								th:text="${'Verified Application'}">Verified Application-DVO</a></li>
+								
+						<li class="nav-item"><a id="samples" class="nav-link"
+								th:classappend="${session.tab.equals('pickupSchedule')} ? 'active' : ''"
+								th:href="@{/district/getNoPickupScheduledList}"
+								th:text="${'Pickup Schedule'}">PickUp Schedule</a></li>
+						</ul>
+						</span>
+						<span th:if='${session.userBean.DCDEOUser!=null&&session.userBean.DCDEOUser=="Y"}'>	
+						<ul class="nav nav-tabs" th:if='${session.userBean.userDomain!=null&&session.userBean.userDomain=="D"}'>
+						<li class="nav-item"><a id="samples" class="nav-link"
+								th:classappend="${session.tab.equals('applicationDCDEO')} ? 'active' : ''"
+								th:href="@{/district/getDistrictApplicationDCDEOList}"
+								th:text="${'Application-DC-DEO'}">Application-DC-DEO</a></li>
+						</ul>
+						</span>
+						<span th:if='${session.userBean.DCUser!=null&&session.userBean.DCUser=="Y"}'>	
+						<ul class="nav nav-tabs" th:if='${session.userBean.userDomain!=null&&session.userBean.userDomain=="D"}'>				
+						<li class="nav-item"><a id="samples" class="nav-link"
+								th:classappend="${session.tab.equals('dashboardDVO')} ? 'active' : ''"
+								th:href="@{/dashboard/gotoDashboardDVO}"
+								th:text="${'Dashboard'}">Dash board-DC</a></li>
+						<li class="nav-item"><a id="samples" class="nav-link"
+								th:classappend="${session.tab.equals('applicationDC')} ? 'active' : ''"
+								th:href="@{/district/getDistrictApplicationDCList}"
+								th:text="${'Approval Pending'}">Application-DC</a></li>
+						<li class="nav-item"><a id="samples" class="nav-link"
+								th:classappend="${session.tab.equals('applicationApprovedDC')} ? 'active' : ''"
+								th:href="@{/district/getDistrictApplicationApprovedDCList}"
+								th:text="${'Approved Application'}">Application-DC</a></li>
+						</ul>
+						</span>
+						<span th:if='${session.userBean.CullingOfficer!=null&&session.userBean.CullingOfficer=="Y"}'>	
+						<ul class="nav nav-tabs" th:if='${session.userBean.userDomain!=null&&session.userBean.userDomain=="C"}'>				
+						<li class="nav-item"><a id="samples" class="nav-link"
+								th:classappend="${session.tab.equals('scheduledCO')} ? 'active' : ''"
+								th:href="@{/district/getPickupScheduledCullingOfficeList}"
+								th:text="${'Scheduled'}">Scheduled</a></li>
+						<li class="nav-item"><a id="samples" class="nav-link"
+								th:classappend="${session.tab.equals('collectedCO')} ? 'active' : ''"
+								th:href="@{/district/getCullingOfficeCollectedList}"
+								th:text="${'Collected'}">Collected</a></li>
+						<li class="nav-item"><a id="samples" class="nav-link"
+								th:classappend="${session.tab.equals('culledCO')} ? 'active' : ''"
+								th:href="@{/district/getCullingOfficeCulledList}"
+								th:text="${'Culled'}">Culled</a></li>
+						</ul>
+						</span>
+				</div>
+			</div>
+		</div>
+	</div>
+
+<!-- 	<div class="container-fluid mt-1">
+		<div class="row justify-content-center font-weight-bold text-danger">
+			APPLICATION WILL UNDERGO DAILY ROUTINE MAINTENANCE AT 01.00 AM.
+			APPLICATION WILL BE AVAILABLE AFTER THE MAINTENANCE IS COMPLETE.
+		</div>
+	</div> -->
+
+	<div class="container-fluid mt-1">
+		<div class="row">
+			<div class="col-12 pl-0">
+
+				<ul class="dropdown dropdown-horizontal" th:if="${session.tab!=null&&session.tab.equals('settings')}">
+					<li><a id="carcassratesetup"
+							th:classappend="${session.subtab.equals('carcassratesetup')} ? 'active' : ''"
+							th:href="@{/setup/getCarcassRateSetup}">Carcass Rate Setup</a></li>
+
+					 <li><a id="districtusersetup"
+							th:classappend="${session.subtab.equals('districtusersetup')} ? 'active' : ''"
+							th:href="@{/setup/getDistrictUserSetup}">DistrictUser</a></li>
+
+					<!--<li><a id="institutionsetup"
+							th:classappend="${session.subtab.equals('institutionsetup')} ? 'active' : ''"
+							th:href="@{/setup/getInstitutionsSetup}">Quarantine Institutions</a></li>
+
+					<li><a id="institutionusersetup"
+							th:classappend="${session.subtab.equals('institutionusersetup')} ? 'active' : ''"
+							th:href="@{/setup/getInstitutionUserSetup}">Quarantine Institution User</a></li>
+
+					<li><a id="labsetup" th:classappend="${session.subtab.equals('labsetup')} ? 'active' : ''"
+							th:href="@{/setup/gotoLabSetup}">Testing Center</a></li> -->
+				</ul>
+
+
+				<ul class="dropdown dropdown-horizontal"
+					th:if="${session.tab!=null&&session.tab.equals('pickupSchedule')}">
+					<li><a id="homeQuarantineNativeDC"
+							th:classappend="${session.subtab.equals('notScheduled')} ? 'active' : ''"
+							th:href="@{/district/getNoPickupScheduledList}">Pending </a></li>
+
+					<li><a id="institutionQuarantineNativeDC"
+							th:classappend="${session.subtab.equals('scheduled')} ? 'active' : ''"
+							th:href="@{/district/getPickupScheduledList}">Scheduled</a></li>
+				</ul>
+
+			</div>
+		</div>
+	</div>
+</header>

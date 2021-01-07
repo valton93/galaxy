@@ -1,0 +1,211 @@
+<html xmlns:layout="http://www.w3.org/1999/xhtml"
+	layout:decorate="~{layouts/layout}" xmlns:th="http://www.thymeleaf.org">
+<head>
+<title>Vet Cares - Application Details</title>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+	<main role="main" class="container-fluid" layout:fragment="content" data-ng-app="newReportApp">
+<div id="report1Accordian" class="mt-4">
+				<div class="card">
+					<div class="card-header bg-primary" id="goingToHeading">
+						<button type="button" class="btn btn-sm text-white"
+							data-toggle="collapse" data-target="#report1Collapse"
+							aria-expanded="true" aria-controls="report1Collapse">
+							Parameterized Report
+							</button>
+					</div>
+
+					<div id="report1Collapse" class="collapse show"
+						aria-labelledby="goingToHeading"
+						data-parent="#report1Accordian">
+						<form id="report1Form" action="#"
+			th:action="@{/report/generateReportOne}" method="post"
+			
+			data-ng-controller="newReportOneController" target="_blank">
+						<div class="card-body">
+							<div class="row">
+							<div class="col-sm-6">
+									<div class="form-group">
+										<label for="ifsccode" class="text-gray-800">District</label>
+									<select
+											class="browser-default custom-select text-uppercase"
+											data-width="100%" data-live-search="true"
+											title="Select Native District" id="districtId"
+											th:field="*{filterVO.districtId}"
+											data-ng-model="districtId"
+											data-ng-change="updateEpiCenters()">
+											<option value="0">--ALL--</option>
+											<option th:each="district : ${nativedistricts}"
+												th:value="${district.id}" th:text="${district.districtName}"></option>
+										</select>
+									</div>
+								</div>
+								<div class="col-sm-6">
+								<div class="form-group">
+										<label for="nativeDistrict" class="text-gray-800">
+											Epicenter</label>
+											<span id="epiCenterSpan">
+											 <select
+											class="browser-default custom-select text-uppercase"
+											data-width="100%" data-live-search="true"
+											title="Select Native District" id="epiCenter"
+											th:field="*{filterVO.epiCenter}"
+											data-ng-model="epiCenter">
+											<option value="0">--ALL--</option>
+											<option th:each="epicenter : ${epicenters}"
+												th:value="${epicenter.id}" th:text="${epicenter.name}"></option>
+										</select>
+										</span>
+									</div>
+									</div>
+								
+							</div>
+							<div class="row">
+							<div class="col-sm-6">
+										<div class="form-group">
+										<label for="applicationStatus" class="text-gray-800">
+											Application Status</label>
+											 <select
+											class="browser-default custom-select text-uppercase"
+											data-width="100%" data-live-search="true"
+											title="Select Application Status" id="applicationStatus"
+											th:field="*{filterVO.applicationStatus}"
+											data-ng-model="applicationStatus">
+											<option value="0">--ALL--</option>
+											<option value="S">Submitted</option>
+											<option value="V">Verified</option>
+											<option value="A">Approved</option>
+										</select>
+									</div>
+								</div>
+								<div class="col-sm-6">
+									<div class="form-group">
+										<label for="transactionStatus" class="text-gray-800">
+											DBT Transaction Status</label>
+											 <select
+											class="browser-default custom-select text-uppercase"
+											data-width="100%" data-live-search="true"
+											title="Select Transaction Status" id="transactionStatus"
+											th:field="*{filterVO.transactionStatus}"
+											data-ng-model="transactionStatus">
+											<option value="0">--ALL--</option>
+											<option value="N">DBT Not Initiated</option>
+											<option value="I">DBT Initiated Pending</option>
+											<option value="S">DBT Success</option>
+											<option value="F">DBT Failed</option>
+										</select>
+									</div>
+								</div>
+							</div>
+							
+								<div class="row">
+							<div class="col-sm-6">
+										<div class="form-group">
+										<label for="collectionStatus" class="text-gray-800">
+											Collection Status</label>
+											 <select
+											class="browser-default custom-select text-uppercase"
+											data-width="100%" data-live-search="true"
+											title="Select Application Status" id="collectionStatus"
+											th:field="*{filterVO.collectionStatus}"
+											data-ng-model="collectionStatus">
+											<option value="0">--ALL--</option>
+											<option value="NS">Pickup Schedule Pending</option>
+											<option value="PP">Pickup Pending</option>
+											<option value="C">Collected</option>
+										</select>
+									</div>
+								</div>
+								<div class="col-sm-6">
+									<div class="form-group">
+										<label for="cullingStatus" class="text-gray-800">
+											Culling Status</label>
+											 <select
+											class="browser-default custom-select text-uppercase"
+											data-width="100%" data-live-search="true"
+											title="Select Transaction Status" id="cullingStatus"
+											th:field="*{filterVO.cullingStatus}"
+											data-ng-model="cullingStatus">
+											<option value="0">--ALL--</option>
+											<option value="P">Culling Pending</option>
+											<option value="C">Culled</option>
+										</select>
+									</div>
+								</div>
+							</div>
+					<div class="row mt-4">
+					<div class="col-sm-12 text-center">
+					<input type="submit" id="generateReport1" class="btn btn-warning"
+						value="Generate Report"  />
+					</div>
+			</div>
+						</div>
+						</form>
+					</div>
+				</div>
+			</div>
+	</main>
+
+</body>
+</html>
+<script th:inline="javascript">
+var application = angular.module('newReportApp', []);
+application.controller('newReportOneController', function ($scope, $http) {
+	$scope.districtId = $("#districtId").val() ;
+	if (typeof $scope.districtId === 'undefined'
+		|| $scope.districtId == null) {
+		$scope.districtId = "0";
+	}
+	$scope.districtId = $scope.districtId + '';
+	
+	$scope.epiCenter = $("#epiCenter").val() ;
+	if (typeof $scope.epiCenter === 'undefined'
+		|| $scope.epiCenter == null) {
+		$scope.epiCenter = "0";
+	}
+	$scope.epiCenter = $scope.epiCenter + '';
+	
+	$scope.applicationStatus = $("#applicationStatus").val() ;
+	if (typeof $scope.applicationStatus === 'undefined'
+		|| $scope.applicationStatus == null) {
+		$scope.applicationStatus = "0";
+	}
+	$scope.applicationStatus = $scope.applicationStatus + '';
+	
+	$scope.transactionStatus = $("#transactionStatus").val() ;
+	if (typeof $scope.transactionStatus === 'undefined'
+		|| $scope.transactionStatus == null) {
+		$scope.transactionStatus = "0";
+	}
+	$scope.transactionStatus = $scope.transactionStatus + '';
+	
+	$scope.collectionStatus = $("#collectionStatus").val() ;
+	if (typeof $scope.collectionStatus === 'undefined'
+		|| $scope.collectionStatus == null) {
+		$scope.collectionStatus = "0";
+	}
+	$scope.collectionStatus = $scope.collectionStatus + '';
+	
+	$scope.cullingStatus = $("#cullingStatus").val() ;
+	if (typeof $scope.cullingStatus === 'undefined'
+		|| $scope.cullingStatus == null) {
+		$scope.cullingStatus = "0";
+	}
+	$scope.cullingStatus = $scope.cullingStatus + '';
+	
+	$scope.updateEpiCenters = function () {
+		var selectedDistrict = $("#districtId").val();
+		$http({
+			method: "GET",
+			url: /*[[ @{'/open/getEpicCenters'} ]]*/,
+			params: {
+				district: selectedDistrict
+			}
+		}).then(function mySuccess(response) {
+			$("#epiCenterSpan").html(response.data);
+		});
+	};
+});
+</script>

@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html xmlns:layout="http://www.w3.org/1999/xhtml"
+	layout:decorate="~{layouts/layout}">
+<head>
+
+<title>Screening Center User Setup</title>
+</head>
+
+<body>
+	<main role="main" class="container-fluid" layout:fragment="content">
+		<form id="callsForm">
+			<div class="row mt-3">
+				<div class="col-12 text-center">
+					<h6 class="font-weight-bold mt-1">Screening Center User Setup</h6>
+				</div>
+			</div>
+
+			<div class="row">
+				<div class="col-6"></div>
+				<div class="col-6 text-right">
+					<button type="button" onclick="addNewScreeningCenterUserModal()"
+						class="btn btn-warning btn-sm">
+						<i class="fa fa-plus "></i> Add
+					</button>
+
+					<!-- <button type="button" class="btn btn-warning btn-sm"
+						data-toggle="modal" data-target="#addNewModal">
+						<i class="fa fa-plus "></i> Add
+					</button> -->
+				</div>
+			</div>
+
+			<div class="row my-2">
+				<div class="col-12">
+					<table class="table table-sm table-bordered vertical-middle">
+						<tr class="thead-light">
+							<th width="5%" class="text-center p-2">#</th>
+							<th width="20%">Screening Center</th>
+							<th width="20%">Screening site Name</th>
+							<th width="10%">Mobile Number</th>
+							<th width="10%">Email</th>
+							<th width="10%">Username</th>
+							<th width="15%">Roles</th>
+							<th width="10%" class="text-center p-2"></th>
+						</tr>
+						<tr
+							th:if="screeningCentersUserList==null OR ${#lists.isEmpty(screeningCentersUserList)}">
+							<td colspan="6" class="text-center">-- No Details Found --</td>
+						</tr>
+						<tr th:if="${not #lists.isEmpty(screeningCentersUserList)}"
+							th:each="detail, status : ${screeningCentersUserList}"
+							th:id="${detail.id}" class="detailsRow">
+							<td class="text-center serialNo" th:text="${status.count+((pagination.pageNumber-1)*pagination.pageSize)}"></td>
+							<td ><span th:if="${detail.center!=null}"
+								th:text="${detail.center.name}"></span> <span
+								th:unless="${detail.center!=null}">--</span></td>
+							<td><span
+								class="font-weight-bold text-primary cursor-pointer"
+								th:text="${detail.name}"
+								th:attr="onclick=|editNewScreeningCenterUserModal('${detail.id}')|"
+								title="Click to edit the details"></span></td>
+							<td th:text="${detail.mobile}"></td>
+							<td th:text="${detail.email}"></td>
+							<td th:text="${detail.userName}"></td>
+							<td><span th:if="${detail.dataEntryOperator!='N'}">Data
+									Entry Operator,</span> <span th:if="${detail.screeningUser!='N'}">Screening
+									User,</span> <span th:if="${detail.sampleCollector!='N'}">Sample
+									Collector,</span> <span th:if="${detail.coordinator!='N'}">Coordinator,</span>
+								<span th:if="${detail.sampleManager!='N'}">Sample
+									Collector Manager,</span> <span
+								th:if="${detail.facilityAdministrator!='N'}">Facility
+									Administrator,</span></td>
+							<td class="text-center" th:switch="${detail.activeStatus}">
+								<span th:case="'Y'"><button type="button"
+										th:attr="onclick=|deactivateUser('${detail.id}')|"
+										class="btn btn-danger btn-circle btn-sm">Deactivate</button></span>
+								<span th:case="'N'"><font color="red">Deactivated</font></span>
+							</td>
+						</tr>
+					</table>
+				</div>
+			</div>
+			
+			<div class="row mb-5" th:replace="fragments/pagination :: pagination">
+				<!-- PAGINATION -->
+			</div>
+			<div class="modal fade" id="registrationModal" tabindex="-1"
+				role="dialog" aria-labelledby="registrationModalLabel"
+				aria-hidden="true">
+				<div class="modal-dialog modal-lg" role="document">
+					<div class="modal-content">
+						<div class="modal-header">
+							<h5 class="modal-title" id="registrationModalLabel"></h5>
+							<button type="button" class="close" data-dismiss="modal"
+								aria-label="Close">
+								<span aria-hidden="true">&times;</span>
+							</button>
+						</div>
+						<div class="modal-body"></div>
+					</div>
+				</div>
+			</div>
+		</form>
+	</main>
+</body>
+</html>
+
+<script th:inline="javascript">
+	function addNewScreeningCenterUserModal() {
+		$('#registrationModalLabel').html('Add New Screening Center User');
+		$('#registrationModal .modal-header').removeClass(
+				"bg-warning bg-danger text-black");
+		$('#registrationModal .modal-header').addClass("bg-info text-white");
+		$.ajax({
+			type : "GET",
+			url : "../setup/addNewScreeningCenterUser",
+			async : false,
+			beforeSend : function() {
+				$('#registrationModal .modal-body').html('Loading...');
+			},
+			success : function(result) {
+				$('#registrationModal .modal-body').html(result);
+			}
+		});
+
+		$('#registrationModal').modal('show');
+	}
+	
+	function editNewScreeningCenterUserModal(id) {
+		$('#registrationModalLabel').html('Add New Screening Center User');
+		$('#registrationModal .modal-header').removeClass(
+				"bg-warning bg-danger text-black");
+		$('#registrationModal .modal-header').addClass("bg-info text-white");
+		$.ajax({
+			type : "GET",
+			url : "../setup/editNewScreeningCenterUserModal",
+			data : {
+				id : id
+			},
+			async : false,
+			beforeSend : function() {
+				$('#registrationModal .modal-body').html('Loading...');
+			},
+			success : function(result) {
+				$('#registrationModal .modal-body').html(result);
+			}
+		});
+
+		$('#registrationModal').modal('show');
+	}
+
+	function deactivateUser(id) {
+		if (confirm("Do you want to Deactivate User ?")) {
+			$.ajax({
+				type : "GET",
+				url : "../setup/deactivateUserScreeningCenterUser",
+				data : {
+					id : id
+				},
+				success : function(msg) {
+					window.location.reload()
+				}
+			});
+		}
+	}
+</script>

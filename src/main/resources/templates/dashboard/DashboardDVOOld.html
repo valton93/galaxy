@@ -1,0 +1,744 @@
+<!DOCTYPE html>
+<html xmlns:layout="http://www.w3.org/1999/xhtml" layout:decorate="~{layouts/layout}">
+<head>
+<title>Vet Cares - Application Details</title>
+<link rel="stylesheet" th:href="@{/css/dashboard-style.css}" />
+<script th:src="@{/Highcharts804/code/highcharts.js}"></script>
+<script th:src="@{/Highcharts804/code/modules/exporting.js}"></script>
+<script th:src="@{/Highcharts804/code/modules/export-data.js}"></script>
+<script th:src="@{/Highcharts804/code/modules/accessibility.js}"></script>
+
+<script type="text/javascript">
+var distId;
+	$(document).ready(function() {
+		refreshIt($('#nativeDistrict').val());
+		distId=$('#nativeDistrict').val();
+		$('#nativeDistrict').val(distId);
+	});
+	function refreshIt(districtId){
+		distId=districtId;
+		getCountForDashboardAjax(districtId);
+		getCountForApplicationAjax(districtId);
+		getDateWiseApplicationChart(districtId);
+
+	}
+</script>
+<script type="text/javascript">
+	function getCountForDashboardAjax(districtId){
+		$.ajax({
+			url : '../dashboard/getCountForDashboardAjax',
+			data : {
+				id:districtId
+				},
+			beforeSend : function() {	
+				},
+			success : function(data) {
+				 if(data == null || !data.length){
+					upto15kg="--";a15kgto40kg="--";a40kgto70kg="--";a70kgto100kg="--";above100kg="--";  					
+				} else {
+					upto15kg=data[0];a15kgto40kg=data[1];a40kgto70kg=data[2];a70kgto100kg=data[3];above100kg=data[4]; 
+				}
+				$('#upto15kg').html(upto15kg);$('#15kgto40kg').html(a15kgto40kg);$('#40kgto70kg').html(a40kgto70kg);$('#70kgto100kg').html(a70kgto100kg);$('#above100kg').html(above100kg); 
+			
+			},error: function(xhr) { // if error occured
+				$.log('XHR ERROR ' + XMLHttpRequest.status);
+				$('#upto15kg').html("--");$('#15kgto40kg').html("--");$('#40kgto70kg').html("--");$('#70kgto100kg').html("--");$('#above100kg').html("--");
+		    }
+		});
+	}
+	function getCountForApplicationAjax(districtId){
+		$.ajax({
+			url : '../dashboard/getCountForApplicationAjax',
+			data : {
+				id:districtId
+				},
+			beforeSend : function() {	
+				},
+			success : function(data) {
+				 if(data == null || !data.length){
+						totalApp="--";submittedApp="--";verifiedApp="--";approvedApp="--";submittedNotVerified="--";verifiedNotApproved="--";
+				} else {
+					totalApp=data[0];submittedApp=data[1];verifiedApp=data[2];approvedApp=data[3];
+					submittedNotVerified=data[4];verifiedNotApproved=data[5];
+				}
+				$('#totalApp').html(totalApp);$('#submittedApp').html(submittedApp);$('#verifiedApp').html(verifiedApp);
+				$('#approvedApp').html(approvedApp);$('#submittedNotVerified').html(submittedNotVerified);
+				$('#verifiedNotApproved').html(verifiedNotApproved); 
+			
+			},error: function(xhr) { // if error occured
+				$.log('XHR ERROR ' + XMLHttpRequest.status);
+				$('#totalApp').html("--");$('#submittedApp').html("--");$('#verifiedApp').html("--");$('#approvedApp').html("--");
+				$('#submittedNotVerified').html("--");$('#verifiedNotApproved').html("--"); 
+		    }
+		});
+	}
+</script>
+<script>
+
+function getDateWiseApplicationChart(districtId) {
+    $.ajax({
+        url : '../dashboard/getDateWiseApplicationChart',
+        data : {
+			id:districtId
+			},
+        beforeSend : function() {
+        	$("#containerApplicationChart").html("<div align='center' style='font-size:20px;'><img src='getloadingImage' alt='Loading, Please Wait..' ></img></div>");
+        },
+        success : function(result) {
+        	dateWiseApplicationChart(result.seriesData,result.dates);
+        }
+    });
+}
+function dateWiseApplicationChart(seriesData,seriesHeading){
+	seriesData = eval('[' + seriesData+ ']');
+	seriesHeading=eval('[' + seriesHeading+ ']');
+	Highcharts.chart('containerApplicationChart', {
+	    title: {
+	        text: ''
+	    },
+	    subtitle: {
+	        text: ''
+	    },
+	    yAxis: {
+	        title: {
+	            text: 'Count In Numbers'
+	        }
+	    },
+	    xAxis: {
+	        categories: seriesHeading,
+	        crosshair: true,
+	      
+	    },
+	    legend: {
+	        layout: 'vertical',
+	        align: 'right',
+	        verticalAlign: 'middle'
+	       
+	    },
+	    tooltip: {
+	        headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
+	        pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
+	            '<td style="padding:0"><b>{point.y:1f}</b></td></tr>',
+	        footerFormat: '</table>',
+	        shared: true,
+	        useHTML: true
+	    },
+	    plotOptions: {
+	        series: {
+	            label: {
+	                connectorAllowed: false,pointWidth: 150
+	            }
+	        }
+	    },
+	    credits: {enabled: false}, 
+	    exporting: {
+	        buttons: {
+		          contextButton: {
+		            menuItems: ['downloadPNG', 'downloadJPEG', 'downloadPDF', 'downloadSVG','downloadCSV',],
+		          },
+		        },
+		   },
+	    series: seriesData,
+	    colors: ['#4CAF50','#FF9800','#E86850'],
+	    responsive: {
+	        rules: [{
+	            condition: {
+	                maxWidth: 500
+	            },
+	            chartOptions: {
+	                legend: {
+	                    layout: 'horizontal',
+	                    align: 'center',
+	                    verticalAlign: 'bottom'
+	                }
+	            }
+	        }]
+	    }
+
+	});
+
+}
+</script>
+<style>
+.something {
+  margin: 0 auto;
+  overflow: hidden;
+  position: relative;
+}
+.arrow-right {
+  background-color:#e3e3e3;
+  box-shadow: 0 0 3px 2px rgba(183, 180, 180, 0.8);
+  height: 100px;
+  left: -100px;
+  position: absolute;
+  top: -50px;
+  width: 100px;
+  
+  -webkit-transform: rotate(-45deg);
+.arrow-right span {
+  color: #f5f5f5;
+  font-family: sans-serif;
+  font-size: 1.005em;
+  left: 28px;
+  top: 78px;
+  position: absolute;
+  width: 80px;
+}
+.text-right{
+	text-align: right;
+}
+
+</style>
+ <style type="text/css">
+
+
+.card {
+	color: #333;
+	background: #fff;
+	width: 100%;
+	box-shadow: 0 2px 2px 0 rgba(0, 0, 0, .14), 0 3px 1px -2px
+		rgba(0, 0, 0, .2), 0 1px 5px 0 rgba(0, 0, 0, .12);
+	display: flex;
+	background-color: #fff;
+	background-clip: border-box;
+	border: 1px solid #eee;
+	border-radius: .25rem;
+	margin: 20px 5px 5px 0px;
+}
+
+.bg-gradient-info {
+	background: linear-gradient(87deg, #11cdef 0, #1171ef 100%) !important;
+}
+
+.bg-gradient-danger {
+	background: linear-gradient(87deg, #f5365c 0, #f56036 100%) !important;
+}
+
+.text-white {
+	color: #fff !important;
+}
+.text-red {
+    color: 
+    #e60707 !important;
+}
+.info-box {
+	box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+	display: flex;
+	cursor: default;
+	background-color: #fff;
+	position: relative;
+	overflow: hidden;
+	margin-bottom: 20px;
+}
+
+.info-box .icon {
+	display: inline-block;
+	text-align: center;
+	background-color: rgba(0, 0, 0, 0.12);
+	width: 90px;
+}
+
+.info-box .icon i {
+	color: #fff;
+	font-size: 50px;
+	line-height: 80px;
+}
+
+.info-box .icon .chart.chart-bar {
+	height: 100%;
+	line-height: 100px;
+}
+
+.info-box .icon .chart.chart-bar canvas {
+	vertical-align: baseline !important;
+}
+
+.info-box .icon .chart.chart-pie {
+	height: 100%;
+	line-height: 123px;
+}
+
+.info-box .icon .chart.chart-pie canvas {
+	vertical-align: baseline !important;
+}
+
+.info-box .icon .chart.chart-line {
+	height: 100%;
+	line-height: 115px;
+}
+
+.info-box .icon .chart.chart-line canvas {
+	vertical-align: baseline !important;
+}
+
+.info-box .content {
+	display: inline-block;
+}
+
+.info-box .content .text {
+	font-size: 14px;
+	margin-top: 11px;
+	color: #555;
+	padding-left: 10px;
+	min-height: 30px;
+}
+
+.txt {
+	padding: 6px 2px 4px 2px;
+	font-size: 18px;
+}
+
+.txtLabel {
+	padding: 10px;
+	font-size: 14px;
+	color: #555;
+}
+
+.info-box .content .number {
+	font-weight: normal;
+	font-size: 26px;
+	margin-top: -4px;
+	color: #555;
+	padding-left: 10px;
+}
+
+.info-box.hover-zoom-effect .icon {
+	overflow: hidden;
+}
+
+.info-box.hover-zoom-effect .icon i {
+	-moz-transition: all 0.3s ease;
+	-o-transition: all 0.3s ease;
+	-webkit-transition: all 0.3s ease;
+	transition: all 0.3s ease;
+}
+
+.info-box.hover-zoom-effect:hover .icon i {
+	opacity: 0.4;
+	-moz-transform: rotate(-32deg) scale(1.4);
+	-ms-transform: rotate(-32deg) scale(1.4);
+	-o-transform: rotate(-32deg) scale(1.4);
+	-webkit-transform: rotate(-32deg) scale(1.4);
+	transform: rotate(-32deg) scale(1.4);
+}
+
+.info-box.hover-expand-effect:after {
+	background-color: rgba(0, 0, 0, 0.05);
+	content: ".";
+	position: absolute;
+	left: 80px;
+	top: 0;
+	width: 0;
+	height: 100%;
+	color: transparent;
+	-moz-transition: all 0.95s;
+	-o-transition: all 0.95s;
+	-webkit-transition: all 0.95s;
+	transition: all 0.95s;
+}
+
+.info-box.hover-expand-effect:hover:after {
+	width: 100%;
+}
+
+.button-click {
+  display: inline-block;
+  padding: 5px 15px;
+  cursor: pointer;
+  text-align: center;
+  text-decoration: none;
+  outline: none;
+  color: #fff;
+  background-color: #4CAF50;
+  border: none;
+  border-radius: 15px;
+  box-shadow: 0 3px #999;
+}
+
+.button-click:hover {background-color: #3e8e41}
+
+.button-click:active {
+  background-color: #3e8e41;
+  box-shadow: 0 2px #666;
+  transform: translateY(1px);
+}
+</style> 
+
+<style>
+.header-link {
+	color: white !important;
+	outline: none;
+}
+
+.close {
+	float: right;
+	font-size: 21px;
+	font-weight: 700;
+	line-height: 1;
+	color: white;
+	text-shadow: 0 1px 0 #fff;
+	filter: alpha(opacity = 20);
+	opacity: 1.2;
+}
+
+
+#parent {
+	display: table;
+	height: 100%;
+	width: 100%;
+}
+
+#child {
+	display: table-cell;
+	vertical-align: middle;
+	text-align: center;
+}
+.chose_area .features_info p {
+    font-size: 16px;
+    line-height: 26px;
+    color: 
+    #727272;
+    margin-bottom: 22px;
+    margin-top: 28px;
+}
+p {
+    font-size: 16px;
+    font-weight: 300;
+    line-height: 28px;
+    color: #4D4D4D;
+    margin-bottom: 13px;
+    font-family: "Poppins", sans-serif;
+}
+
+.my-custom-scrollbar {
+	position: relative;
+	height: 280px;
+	overflow: auto;
+}
+.table-wrapper-scroll-y {
+display: block;
+}
+
+.table-fixed thead {
+  width: 97%;
+}
+.table-fixed tbody {
+  height: 230px;
+  overflow-y: auto;
+  width: 100%;
+}
+.table-fixed thead, .table-fixed tbody, .table-fixed tr, .table-fixed td, .table-fixed th {
+  display: block;
+}
+.table-fixed tbody td, .table-fixed thead > tr> th {
+  float: left;
+  border-bottom-width: 0;
+}
+.card .card-header-gradientRed .card-icon, .card .card-header-gradientRed .card-text, .card .card-header-gradientRed:not(.card-header-icon):not(.card-header-text), .card.bg-gradientRed, .card.card-rotate.bg-gradientRed .front, .card.card-rotate.bg-gradientRed .back {
+    background: linear-gradient(87deg, #f5365c 0, #f56036 100%) !important;
+}
+h5, .h5 {
+    font-size: 1rem;
+}
+</style> 
+<style>
+.card .card-header-gradientGrey1 .card-icon, .card .card-header-gradientGrey1 .card-text, .card .card-header-gradientGrey1:not(.card-header-icon):not(.card-header-text), .card.bg-gradientGrey1, .card.card-rotate.bg-gradientGrey1 .front, .card.card-rotate.bg-gradientGrey1 .back {
+	background: linear-gradient(147deg, #eaeaea 0%, #edf1f4 74%)!important;
+	color: #000;
+	
+}
+.card .card-header-gradientGrey2 .card-icon, .card .card-header-gradientGrey1 .card-text, .card .card-header-gradientGrey1:not(.card-header-icon):not(.card-header-text), .card.bg-gradientGrey1, .card.card-rotate.bg-gradientGrey1 .front, .card.card-rotate.bg-gradientGrey1 .back {
+	background: linear-gradient(147deg, #fff9fc 0%, #edf1f4 74%)!important;
+	color: #000;
+	
+}
+.bg-grey1 {
+    background-color: #b8c6db;
+	background-image: linear-gradient(315deg, #b8c6db 0%, #f5f7fa 74%);
+	color: #000;
+}
+.bg-grey2 {
+   	background-color: #f1dfd1;
+	background-image: linear-gradient(315deg, #f1dfd1 0%, #f6f0ea 74%);
+	color: #000;
+}
+.bg-grey3 {
+   	background-color: #deebdd;
+	background-image: linear-gradient(315deg, #deebdd 0%, #bbdbbe 74%);
+	color: #000;
+}
+
+.bg-grey4 {
+   	background-color: #d9e4f5;
+	background-image: linear-gradient(315deg, #d9e4f5 0%, #f5e3e6 74%);
+	color: #000;
+}
+.bg-grey5 {
+   	background-color: #f3e6e8;
+	background-image: linear-gradient(315deg, #f3e6e8 0%, #d5d0e5 74%);
+	color: #000;
+}
+
+.bg-grey6 {
+   	background-color: #fee2f8;
+	background-image: linear-gradient(315deg, #fee2f8 0%, #dcf8ef 74%);
+	color: #000;
+}
+.bg-grey7 {
+	background-color #e7eff9;
+	background-image linear-gradient(315deg, #e7eff9 0%, #cfd6e6 74%);
+	color: #000;
+}
+.bg-grey8 {
+	background-color: #e2d5e6;
+	background-image: linear-gradient(315deg, #e2d5e6 0%, #e1d4e6 74%);
+	color: #000;
+}
+
+</style>
+</head>
+
+<body class="">
+	<main role="main" class="container-fluid my-3" layout:fragment="content">
+	<div class="row" style="background: none;margin: 10px 0px 20px 0px;">
+		<div class="col-sm-12 col-md-12 col-xl-12 col-lg-12" align="right">
+				<select 
+					class="browser-default custom-select col-xl-3 col-lg-3" id="nativeDistrict" title="Select Native District"	
+					onchange="refreshIt(this.value);" th:field="*{filterVO.districtId}"
+					data-width="100%" data-live-search="true" data-ng-model="nativeDistrict">
+					<option value="0">All Districts</option>
+					<option th:each="district : ${nativedistricts}"	th:value="${district.id}" th:text="${district.districtName}"></option>
+				</select>
+		</div>
+	</div>
+							
+	<div class="row"  style="margin-left: 4px;margin-right: 4px;">
+	<div class="col-sm-24 col-md-11 col-xl-2 col-lg-2" style="padding-right: 1px; padding-left: 1px;margin-left: 2px;margin-right: 2px;">
+	<div class="card card-stats mb-4 mb-xl-0 something" data-header-animation="true"
+		style="background-color: #eaeaea66;margin: 5px 15px 10px 0px;padding: 0px;">
+		
+		<div class="arrow-right"><span></span></div>
+		
+		<div class="card-body" >
+			<div class="row">
+				<div class="col-2"><i class="fa fa-bars"></i></div>
+				<div class="col">
+					<h6 class="card-title text-muted mb-0 text-left fontsize7" style="font-size: 0.8rem;">Piglet<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</font></h6>
+					<h4 class="text-right"><span class=" font-weight-bold mb-0 fontsize8" id="upto15kg">--</span></h4>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col" style="text-align: left;font-size: 0.7rem;">
+					<span class="h7 text-muted font-weight-bold mb-0 fontsize8"> Carcass Weight: </span>
+					<span class="h7 text-muted font-weight-bold mb-0 fontsize8" id="screenedToday">Upto 15kg</span>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div class="col-sm-24 col-md-11 col-xl-2 col-lg-2" style="padding-right: 1px; padding-left: 1px;margin-left: 4px;margin-right: 4px;">
+	<div class="card card-stats mb-4 mb-xl-0 something"
+		style="background-color: #fff9fc;margin: 5px 15px 10px 0px;padding: 0px;">
+		<div class="arrow-right"><span></span></div>
+		
+		<div class="card-body">
+			<div class="row">
+				<div class="col-2"><i class="fa fa-bars"></i></div>
+				<div class="col">
+					<h6 class="card-title text-muted mb-0 text-left fontsize7" style="font-size: 0.8rem;">Grower/Finisher/Adult<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</h6>
+					<h4 class="text-right"><span class="font-weight-bold mb-0 fontsize8" id="15kgto40kg">--</span></h4>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col" style="text-align: left;font-size: 0.7rem;">
+					<span class="h7 text-muted font-weight-bold mb-0 fontsize8"> Carcass Weight: </span>
+					<span class="h7 text-muted font-weight-bold mb-0 fontsize8" id="screenedToday">15kg-40kg</span>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div class="col-sm-24 col-md-11 col-xl-2 col-lg-2" style="padding-right: 1px; padding-left: 1px;margin-left: 4px;margin-right: 4px;">
+	<div class="card card-stats mb-4 mb-xl-0 something"
+		style="background-color: #eaeaea66;margin: 5px 15px 10px 0px;padding: 0px;">
+		<div class="arrow-right"><span></span></div>
+		
+		<div class="card-body">
+			<div class="row">
+				<div class="col-2"><i class="fa fa-bars"></i></div>
+				<div class="col">
+					<h6 class="card-title text-muted mb-0 text-left fontsize7" style="font-size: 0.8rem;">Finisher/Adult/Breeding/Sow</h6>
+					<h4 class="text-right"><span class="font-weight-bold mb-0 fontsize8" id="40kgto70kg">--</span></h4>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col" style="text-align: left;font-size: 0.7rem;">
+					<span class="h7 text-muted font-weight-bold mb-0 fontsize8"> Carcass Weight: </span>
+					<span class="h7 text-muted font-weight-bold mb-0 fontsize8" id="screenedToday">40kg-70kg</span>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+
+
+
+<div class="col-sm-24 col-md-11 col-xl-2 col-lg-2" style="padding-right: 1px; padding-left: 1px;margin-left: 4px;margin-right: 4px;">
+	<div class="card card-stats mb-4 mb-xl-0 something"
+		style="background-color: #fff9fc;margin: 5px 15px 10px 0px;padding: 0px;">
+		<div class="arrow-right"><span></span></div>
+		
+		<div class="card-body">
+			<div class="row">
+				<div class="col-2"><i class="fa fa-bars"></i></div>
+				<div class="col">
+					<h6 class="card-title text-muted mb-0 text-left fontsize7" style="font-size: 0.8rem;">Finisher/Adult/Breeding Boar/Sow</h6>
+					<h4 class="text-right"><span class="font-weight-bold mb-0 fontsize8" id="70kgto100kg">--</span></h4>
+				</div>
+				
+			</div>
+			<div class="row">
+				<div class="col" style="text-align: left;font-size: 0.7rem;">
+					<span class="h7 text-muted font-weight-bold mb-0 fontsize8"> Carcass Weight: </span>
+					<span class="h7 text-muted font-weight-bold mb-0 fontsize8" id="screenedToday">70kg-100kg</span>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div class="col-sm-24 col-md-11 col-xl-2 col-lg-2" style="padding-right: 1px; padding-left: 1px;margin-left: 4px;margin-right: 4px;">
+	<div class="card card-stats mb-4 mb-xl-0 something"
+		style="background-color: #eaeaea66;margin: 5px 15px 10px 0px;padding: 0px;">
+		<div class="arrow-right"><span></span></div>
+		<div class="card-body">
+			<div class="row">
+				<div class="col-2"><i class="fa fa-bars"></i></div>
+				<div class="col">
+					<h6 class="card-title text-muted mb-0 text-left fontsize7" style="font-size: 0.8rem;">Adult/Breeding Boar/Sow</h6>
+					<h4 class="text-right"><span class="font-weight-bold mb-0 fontsize8" id="above100kg">--</span></h4>
+				</div>
+				
+			</div>
+			<div class="row">
+				<div class="col" style="text-align: left;font-size: 0.7rem;">
+					<span class="h7 text-muted font-weight-bold mb-0 fontsize8"> Carcass Weight: </span>
+					<span class="h7 text-muted font-weight-bold mb-0 fontsize8" id="screenedToday"> > 100kg</span>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+</div>	
+
+<div class="row"  style="margin-left: 1px;margin-right: 1px;margin-top: 15px;">
+
+<div class="col-sm-12 col-md-12 col-lg-3 col-xl-3" style="padding-left: 1px;padding-right: 1px;margin-left: 2px;margin-right: 2px;">
+	<div class="card" style="width: 98%; margin-bottom: 5px">
+		<div class="card-header card-header-gradientGrey2 card-header-icon" style="font-size: 16px">
+					<div class="card-icon" style="padding: 10px; text-align: center; font-size: 16px; font-family: cursive;">
+						Total Applications &nbsp;&nbsp;<span class="badge badge-light" style="float: right; padding: 5px"><span id="totalApp"></span></span>
+					</div>
+		</div>
+		<div class="card-body" style="padding: 10px 10px 20px 10px;">
+			<div class="row">
+				<div class="col-sm-12" style="padding: 10px 20px;">
+					<div class="info-box hover-zoom-effect" style="margin-bottom: 0px">
+						<div class="icon txt bg-grey1" style="padding-top: 8px;"><span id="submittedApp"></span></div>
+						<div class="content"><div class="txtLabel">Submitted Application</div></div>
+					</div>
+				</div>
+				<div class="col-sm-12" style="padding: 10px 20px;">
+					<div class="info-box hover-zoom-effect" style="margin-bottom: 0px">
+						<div class="icon txt bg-grey2" style="padding-top: 8px;"><span id="verifiedApp"></span></div>
+						<div class="content"><div class="txtLabel">Verified Application</div></div>
+					 </div>
+				</div>
+				
+				<div class="col-sm-12" style="padding: 10px 20px;">
+					<div class="info-box hover-zoom-effect" style="margin-bottom: 0px">
+						<div class="icon txt bg-grey3" style="padding-top: 8px;"><span id="approvedApp"></span></div>
+						<div class="content"><div class="txtLabel">Approved Application</div></div>
+					 </div>
+				</div>
+				<div class="col-sm-12" style="padding: 10px 20px;">
+					<div class="info-box hover-zoom-effect" style="margin-bottom: 0px">
+						<div class="icon txt bg-grey4" style="padding-top: 8px;"><span id="submittedNotVerified"></span></div>
+						<div class="content"><div class="txtLabel">Pending Verification</div></div>
+					 </div>
+				</div>
+				<div class="col-sm-12" style="padding: 10px 20px;">
+					<div class="info-box hover-zoom-effect" style="margin-bottom: 0px">
+						<div class="icon txt bg-grey5" style="padding-top: 8px;"><span id="verifiedNotApproved"></span></div>
+						<div class="content"><div class="txtLabel">Pending Approval</div></div>
+					 </div>
+				</div>
+			 </div>
+		 </div>
+     </div>
+ </div>
+ 
+ 
+ <div class="col-sm-12 col-md-12 col-lg-8 col-xl-8" style="padding-right: 10px;">
+	<div class="card" style="width: 100%; margin-bottom: 5px">
+		<div class="card-header card-header-gradientGrey2 card-header-icon" style="font-size: 16px">
+					<div class="card-icon" style="padding: 10px; text-align: center; font-size: 16px; font-family: cursive;">
+						Applications &nbsp;&nbsp;
+					</div>
+					<span class="text-white mr-2" style="border-radius: 3px;margin-top: -20px;float: right;background-color:#28a745;">
+					<i class="fa fa-bar-chart"></i></span>
+					
+		</div>
+		<div class="card-body" style="padding: 5px 0px 0px 0px;min-height: 332px;">
+			<div id="containerApplicationChart" style="height: 332px; margin: 0 auto;"></div>
+		 </div>
+     </div>
+</div>
+ 
+</div>
+
+
+</main>
+</body>
+
+</html>
+
+<script th:inline="javascript">
+	var myApp;
+	myApp = myApp || (function () {
+	    return {
+	        showPleaseWait: function() {
+	            $('#pleaseWaitDialog').modal('show');
+	        },
+	        hidePleaseWait: function () {
+	            $('#pleaseWaitDialog').modal('hide');
+	        },
+	    };
+	})();
+	
+	var application = angular.module('screeningApp', []);
+	application.controller('ScreeningController', function ($scope, $http, $compile) {
+		$scope.viewScreeningDetails = function (detailsId) {
+			$.ajax({
+				type : "GET",
+				url : "../entry/gotoScreeningDetailsView",
+				async : false,
+				data : {
+					detailsId: detailsId
+				},
+				beforeSend : function() {
+					$('#screeningViewModal .modal-body').html('Loading...');
+				},
+				success : function(result) {
+					$('#screeningViewModal .modal-body').html($compile(result)($scope));
+					$scope.quarantineAt = '0';
+				}
+			});
+			$('#screeningViewModal').modal('show');
+		};
+	});
+	
+</script>

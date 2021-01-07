@@ -1,0 +1,9 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+
+<select class="browser-default custom-select text-uppercase" id="presentDistrict"
+	name="presentDistrict.id" required>
+	<option value="0">--Select--</option>
+	<option th:each="district : ${presentDistricts}"
+		th:value="${district.id}" th:text="${district.districtName}"></option>
+</select>

@@ -1,0 +1,123 @@
+<div>
+	<form th:action="@{/setup/saveCarcassRateSetup}" method="post">
+
+		<input type="hidden" th:field="*{carcassRateSetup.id}" id="ids">
+
+		<div class="col-sm-12">
+			<div class="row">
+				<div class="col-sm-12">
+					<div id="form">
+						<div class="form-group">
+							<label for="exampleInputEmail1">Category of Destruction</label><input
+								th:field="*{carcassRateSetup.destructionCategory}" type="text"
+								class="form-control" id="destructionCategory" aria-describedby="emailHelp"
+								placeholder="Enter Category of Destruction">
+						</div>
+					</div>
+				</div>
+				<div class="col-sm-4">
+					<div class="form-group">
+						<label for="exampleInputEmail1">From Weight(kg)</label> <input
+							th:field="*{carcassRateSetup.fromKg}" type="text" 
+							class="form-control number-only" id="from"
+							aria-describedby="emailHelp" placeholder="Enter From Weight(kg)">
+					</div>
+				</div>
+				<div class="col-sm-4">
+					<div class="form-group">			
+							<label for="exampleInputEmail1">To Weight(kg)</label> <input
+							th:field="*{carcassRateSetup.toKg}" type="text"
+							class="form-control number-only" id="to"
+							aria-describedby="emailHelp" placeholder="Enter To Weight(kg)">
+					</div>
+				</div>
+				<div class="col-sm-4">
+					<div class="form-group">
+						<label for="exampleInputEmail1">Compensation Rate(Rs.)</label> <input
+							th:field="*{carcassRateSetup.rate}" type="text"
+							class="form-control decimal-number-only" id="rate"
+							aria-describedby="emailHelp" placeholder="Enter Compensation Rate(Rs.)">
+							
+						
+					</div>
+				</div>
+			</div>
+			
+			<div class="row mt-4 mb-2">
+				<div class="col-sm-12 text-center"
+					th:if='${carcassRateSetup.id!=null}'>
+					<button style="text-align: center;" type="submit"
+						class="btn btn-sm btn-primary" onclick="return validateForm()">Update</button>
+				</div>
+				<div class="col-sm-12 text-center"
+					th:if='${carcassRateSetup.id==null}'>
+					<button style="text-align: center;" type="submit"
+						class="btn btn-sm btn-primary" onclick="return validateForm()">Save</button>
+				</div>
+			</div>
+	</form>
+</div>
+
+<script th:inline="javascript">
+	function isNumber(event) {
+		var numeric = new RegExp("^[0-9\b]+$");
+		var keyCode = String.fromCharCode(!event.charCode ? event.which	: event.charCode);
+		if (!numeric.test(keyCode)) {
+			event.preventDefault();
+			return false;
+		}
+	}
+	$(document).ready(function () {
+		$(".number-only").on("keypress keyup blur", function (event) {
+			$(this).val(
+				$(this).val().replace(/[^\d].+/, "")
+			);
+			if (event.which < 48 || event.which > 57) {
+				event.preventDefault();
+			}
+		});
+	});
+	function validateForm() {
+
+			var destructionCategory = $("#destructionCategory").val().trim();
+			if (destructionCategory == '' || destructionCategory == null) {
+				alert('Please enter Category of Destruction');
+				$("#destructionCategory").focus();
+				return false;
+			}
+			var to = $("#to").val().trim();
+			if (to == '' || to == null || to=='0') {
+				alert('Please enter To Weight(kg)');
+				$("#to").focus();
+				return false;
+			}
+			var rate = $("#rate").val().trim();
+			if (rate == '' || rate == null || rate=='0.0') {
+				alert('Please enter Compensation Rate(Rs.)');
+				$("#rate").focus();
+				return false;
+			}
+			/* var name = $('[name="name"]').val();
+			if (name == "") {
+				alert("Please Provide name")
+				return false;
+			}
+			var mobile = $('[name="mobile"]').val();
+			if (mobile == "") {
+				alert("Please Provide Mobile Number")
+				return false;
+			} else {
+				if (mobile.length < 10) {
+					alert("Invalid Mobile number")
+					return false;
+				}
+			}
+			var email = $('[name="email"]').val();
+			if (email == "") {
+				alert("Please Provide Email Id")
+				return false;
+			} */
+
+		return true;
+	}
+</script>

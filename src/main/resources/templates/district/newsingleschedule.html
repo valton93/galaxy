@@ -1,0 +1,653 @@
+<!DOCTYPE html>
+<html xmlns:layout="http://www.w3.org/1999/xhtml"
+	layout:decorate="~{layouts/layout}" xmlns:th="http://www.thymeleaf.org">
+<head>
+
+<title>VeterinaryAssist - Application</title>
+
+<style type="text/css">
+.card .card-header {
+	padding: .2rem 1rem;
+}
+</style>
+
+</head>
+<body>
+	<main role="main" class="container mb-5" layout:fragment="content">
+		<form id="newScreeningForm" action="#"
+			th:action="@{/district/scheduleSingleApplicationDVO}" method="post"
+			data-ng-app="newScreeningApp"
+			data-ng-controller="NewScreeningController"
+			th:object="${farmerDetails}">
+			<div class="row mt-3">
+				<div class="col-12 text-right">
+					<a th:href="@{/district/getNoPickupScheduledList}">
+						<button type="button" class="btn btn-sm btn-primary">
+							<i class="fa fa-angle-left"></i>&nbsp;Go Back
+						</button>
+					</a>
+				</div>
+
+				<div class="col-12 text-center">
+					<h6 class="font-weight-bold mt-1">APPLICATION</h6>
+				</div>
+
+				<div th:if="${fieldErrors!=null}"
+					class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+					<div class="alert alert-danger" role="alert">
+						<ul class="mb-0">
+							<li th:each="error : ${fieldErrors}" th:text="${error.value}"></li>
+						</ul>
+					</div>
+				</div>
+			</div>
+
+			<div id="personalDetailsAccordion">
+				<div class="card">
+				<table class="table table-bordered vertical-middle mb-0">
+				<tr class="table-primary" >
+								<th colspan="4" id="personalDetailsHeading" class="bg-primary"><button type="button" class="btn btn-sm text-white"
+							data-toggle="collapse" data-target="#personalDetailsCollapse"
+							aria-expanded="true" aria-controls="personalDetailsCollapse">FARMER
+							DETAILS</button></th>
+				</tr>
+				<tr  >
+								<th width="27%" class="bg-light">Tracking ID (TID)</th>
+								<td width="23%"><span th:text="${farmerDetails.farmer.trackingId}">--</span></td>
+								<th width="25%" class="bg-light">Mobile</th>
+								<td><span th:text="${farmerDetails.farmer.mobile}">--</span>
+								
+								<input
+											type="hidden" class="form-control number-only" id="tid"
+											th:field="*{farmer.trackingId}" maxlength="10" readonly="readonly">
+											<input
+											type="hidden" class="form-control" id="farmerId"
+											th:field="*{farmer.id}"  >
+											<input
+											type="hidden" class="form-control " id="submitBy"
+											th:field="*{farmer.submitBy}"  >
+											<input
+											type="hidden" class="form-control " id="verfiedBy"
+											th:field="*{farmer.verifiedBy}"  >
+								</td>
+								
+				</tr>
+				<tr >
+								<th class="bg-light">Name</th>
+								<td colspan="3"><span th:text="${farmerDetails.farmer.name}">--</span></td>
+							</tr>
+							
+							<tr id="personalDetailsCollapse" class="collapse hide"
+						aria-labelledby="personalDetailsHeading"
+						data-parent="#personalDetailsAccordion">
+								<th width="27%" class="bg-light">District</th>
+								<td width="23%"><span th:if="${farmerDetails.farmer.nativeDistrict!=null}"
+										th:text="${farmerDetails.farmer.nativeDistrict.districtName}"></span> <span
+										th:unless="${farmerDetails.farmer.nativeDistrict!=null}">--</span></td>
+								<th width="25%" class="bg-light">Epicenter</th>
+								<td><span th:if="${farmerDetails.farmer.epiCenter!=null}" th:text="${farmerDetails.farmer.epiCenter.name}"></span>
+								<span
+										th:unless="${farmerDetails.farmer.epiCenter!=null}">--</span>
+								</td>
+							</tr>
+							
+							<tr id="personalDetailsCollapse" class="collapse hide"
+						aria-labelledby="personalDetailsHeading"
+						data-parent="#personalDetailsAccordion">
+								<th width="27%" class="bg-light">CIRCLE</th>
+								<td width="23%"><span th:text="${farmerDetails.farmer.nativeCircle}">--</span></td>
+								<th width="25%" class="bg-light">Block</th>
+								<td><span th:text="${farmerDetails.farmer.nativeBlock}">--</span></td>
+							</tr>
+							
+							<tr id="personalDetailsCollapse" class="collapse hide"
+						aria-labelledby="personalDetailsHeading"
+						data-parent="#personalDetailsAccordion">
+								<th colspan="2" class="bg-light">Do you belong to Urban or
+									Rural Area ?</th>
+								<td colspan="2"><span th:if='${farmerDetails.farmer.nativeArea=="U"}'>URBAN</span>
+									<span th:if='${farmerDetails.farmer.nativeArea=="R"}'>RURAL</span></td>
+							</tr>
+							<tr th:if='${farmerDetails.farmer.nativeArea=="U"}' id="personalDetailsCollapse" class="collapse hide"
+						aria-labelledby="personalDetailsHeading"
+						data-parent="#personalDetailsAccordion">
+								<th class="bg-light">City/ Town/ Local Body</th>
+								<td><span th:text="${farmerDetails.farmer.nativeCity}"></span></td>
+								<th class="bg-light">Ward</th>
+								<td><span th:text="${farmerDetails.farmer.nativeWard}"></span></td>
+							</tr>
+							<tr th:if='${farmerDetails.farmer.nativeArea=="R"}' id="personalDetailsCollapse" class="collapse hide"
+						aria-labelledby="personalDetailsHeading"
+						data-parent="#personalDetailsAccordion">
+								<th class="bg-light">Village</th>
+								<td><span th:text="${farmerDetails.farmer.nativeVillage}"></span></td>
+								<th class="bg-light">Gram Panchayat</th>
+								<td><span th:text="${farmerDetails.farmer.nativePanchayat}"></span></td>
+							</tr>
+							
+							<tr id="personalDetailsCollapse" class="collapse hide"
+						aria-labelledby="personalDetailsHeading"
+						data-parent="#personalDetailsAccordion">
+								<th class="bg-light">Address</th>
+								<td colspan="3">
+								<span th:if="${farmerDetails.farmer.nativeAddress!=null}" th:text="${farmerDetails.farmer.nativeAddress}"></span>
+								<span th:unless="${farmerDetails.farmer.nativeAddress!=null}">--</span>
+								</td>
+							</tr>
+							<tr id="personalDetailsCollapse" class="collapse hide"
+						aria-labelledby="personalDetailsHeading"
+						data-parent="#personalDetailsAccordion">
+								<th class="bg-light">PINCODE</th>
+								<td colspan="3">
+								<span th:if="${farmerDetails.farmer.nativePincode!=null}" th:text="${farmerDetails.farmer.nativePincode}"></span>
+								<span th:unless="${farmerDetails.farmer.nativePincode!=null}">--</span>
+								</td>
+							</tr>
+								<tr id="personalDetailsCollapse" class="collapse hide"
+						aria-labelledby="personalDetailsHeading"
+						data-parent="#personalDetailsAccordion">
+								<th colspan="1" class="bg-light">Farmer Category</th>
+								<td colspan="1"><span th:if='${farmerDetails.farmer.farmerCategory=="G"}'>General</span>
+									<span th:if='${farmerDetails.farmer.farmerCategory=="SC"}'>SC</span>
+									<span th:if='${farmerDetails.farmer.farmerCategory=="ST"}'>ST</span></td>
+									
+								<th colspan="1" class="bg-light">Farm Category</th>
+								<td colspan="1"><span th:if='${farmerDetails.farmer.farmCategory=="B"}'>Backyard</span>
+									<span th:if='${farmerDetails.farmer.farmCategory=="F"}'>Farm</span></td>
+							</tr>
+							
+							<tr id="personalDetailsCollapse" class="collapse hide"
+						aria-labelledby="personalDetailsHeading"
+						data-parent="#personalDetailsAccordion">
+								<th colspan="1" class="bg-light">LATITUDE</th>
+								<td colspan="1"><span th:text="${farmerDetails.farmer.lat}"></span></td>
+									
+								<th colspan="1" class="bg-light">LONGITUDE</th>
+								<td colspan="1"><span th:text="${farmerDetails.farmer.lng}"></span></td>
+							</tr>
+				</table>
+
+				</div>
+			</div>
+
+
+
+			<div id="bankDetailsAccordion" class="mt-4">
+				<div class="card">
+				<table class="table table-bordered vertical-middle mb-0">
+				<tr class="table-primary ">
+								<th colspan="4" id="goingToHeading" class="bg-primary"><button type="button" class="btn btn-sm text-white"
+							data-toggle="collapse" data-target="#bankDetailsCollapse"
+							aria-expanded="true" aria-controls="bankDetailsCollapse">Bank
+							Account Details</button></th>
+				</tr>
+
+						<tr id="bankDetailsCollapse" class="collapse hide"
+							aria-labelledby="goingToHeading"
+							data-parent="#bankDetailsAccordion">
+							<th class="bg-light">ACCOUNT NUMBER</th>
+							<td colspan="3"><span
+								th:text="${farmerDetails.farmer.accountNumber}">--</span></td>
+						</tr>
+							<tr id="bankDetailsCollapse" class="collapse hide"
+							aria-labelledby="goingToHeading"
+							data-parent="#bankDetailsAccordion">
+							<th class="bg-light">IFSC CODE</th>
+							<td colspan="3"><span
+								th:text="${farmerDetails.farmer.ifscCode}">--</span></td>
+						</tr>
+					</table>
+				</div>
+			</div>
+			
+			<div id="animalDetailsAccordion" class="mt-4">
+				<div class="card">
+				
+				<table class="table table-bordered vertical-middle mb-0">
+				<tr class="table-primary ">
+								<th colspan="4" id="goingToHeading" class="bg-primary"><button type="button" class="btn btn-sm text-white"
+							data-toggle="collapse" data-target="#animalDetailsCollapse"
+							aria-expanded="true" aria-controls="animalDetailsCollapse">Animal
+							Details</button></th>
+				</tr>
+				<tr >
+							<th class="bg-light" colspan="1" width="27%" >NUMBER
+											OF ANIMALS</th>
+							<td colspan="1"><span
+								th:text="${farmerDetails.farmer.noOfAnimal}">--</span></td>
+							<th class="bg-light" colspan="1" width="27%" >TOTAL AMOUNT</th>
+							<td colspan="1"><b>
+								<span th:text="${#numbers.formatDecimal(farmerDetails.farmer.amount, 1, 'COMMA', 2, 'POINT')}">0.00</span></b></td>
+						</tr>
+				
+				</table>
+
+					<div id="animalDetailsCollapse" class="collapse hide"
+						aria-labelledby="goingToHeading"
+						data-parent="#animalDetailsAccordion">
+						<div class="card-body">
+
+							<div class="row">
+							<div class="col-sm-1">
+									<div class="text-gray-800 pb-0">
+										<b>Sl No.</b>
+									</div>
+								</div>
+								<div class="col-sm-3">
+									<div class="text-gray-800 pb-0">
+										<b>REGISTRATION NO/UID</b>
+									</div>
+								</div>
+								<div class="col-sm-1">
+									<div class="text-gray-800 pb-0">
+										<b>Breed</b>
+									</div>
+								</div>
+								<div class="col-sm-1">
+									<div class="text-gray-800 pb-0">
+										<b>WEIGHT(Kg)</b>
+									</div>
+								</div>
+								<div class="col-sm-2">
+									<div class="text-gray-800 pb-0">
+										<b>HEART GIRTH(in Meters)</b>
+									</div>
+								</div>
+								<div class="col-sm-2">
+									<div class="text-gray-800 pb-0">
+										<b>LENGTH(in Meter)</b>
+									</div>
+								</div>
+								<div class="col-sm-2">
+									<div class="text-gray-800 pb-0">
+										<b>AMOUNT</b>
+									</div>
+								</div>
+							</div>
+							<div class='row'>
+								<div class='col-sm-12 '>
+									<hr>
+								</div>
+							</div>
+							<div th:if="${not #lists.isEmpty(farmerDetails.animalDetails)}"
+								th:each="detail, status : ${farmerDetails.animalDetails}"
+								class="animalDetailRow">
+								<div class="row" style="border-bottom: 1px solid #D2D7D3;margin-left: 5px;margin-right: 5px">
+								<div class="col-sm-1">
+										<span th:text="${status.count}"></span>
+									</div>
+									<div class="col-sm-3">
+										<div class="form-group">
+										<span th:if='${detail.regId==""}'> 
+										--
+										</span>
+											<span th:unless='${detail.regId==""}'> 
+										<span
+											th:text="${detail.regId}">--</span>
+										</span>
+										
+										
+										</div>
+									</div>
+
+									<div class="col-sm-1">
+										<div class="form-group">
+											<span th:if='${detail.breed==null}'> 
+										--
+												</span>
+										<span th:if='${detail.breed=="0"}'> 
+										--
+												</span>
+												<span th:if='${detail.breed=="E"}'> 
+												Exotic
+								</span>
+								<span th:if='${detail.breed=="C"}'> 
+												Cross
+								</span>
+								<span th:if='${detail.breed=="L"}'> 
+												Local
+								</span>
+								</div>
+								</div>
+									<div class="col-sm-1">
+										<div class="form-group">
+										<span th:if='${detail.weighStatus=="N"}'> 
+										--
+												</span>
+												<span th:if='${detail.weighStatus!="N"}'> 
+												<span
+								th:text="${detail.liveWeight}">--</span>
+								</span>
+										</div>
+									</div>
+									<div class="col-sm-2">
+										<div class="form-group">
+										<span th:if='${detail.weighStatus=="Y"}'> 
+										--
+												</span>
+												<span th:if='${detail.weighStatus!="Y"}'>
+												<span
+								th:text="${detail.heartGirth}">--</span>
+									</span>												
+										</div>
+									</div>
+									<div class="col-sm-2">
+										<div class="form-group">
+										<span th:if='${detail.weighStatus=="Y"}'> --
+											</span>
+											<span th:if='${detail.weighStatus!="Y"}'>
+												<span
+								th:text="${detail.length}">--</span> 
+											</span>
+										</div>
+									</div>
+									<div class="col-sm-2">
+										<div class="form-group"><b>
+										<span th:text="${#numbers.formatDecimal(detail.amount, 1, 'COMMA', 2, 'POINT')}">0.00</span></b>
+										</div>
+									</div>
+								</div>
+								
+							</div>
+
+						</div>
+					</div>
+				</div>
+			</div>
+			<div id="scheduleAccordion" class="mt-4">
+				<div class="card">
+					<div class="card-header bg-primary" id="scheduleHeading">
+						<button type="button" class="btn btn-sm text-white" data-toggle="collapse"
+							data-target="#scheduleCollapse" aria-expanded="true"
+							aria-controls="scheduleCollapse">SCHEDULING DETAILS</button>
+					</div>
+
+					<div id="scheduleCollapse" class="collapse show"
+						aria-labelledby="screeningHeading"
+						data-parent="#scheduleAccordion">
+						<div class="card-body">
+							<div class="row">
+							<div class="col-sm-6">
+									<div class="form-group">
+										<label for="cullingCenter" class="text-gray-800">Expected Pickup Date</label> 
+										<input type="text" class="form-control datetimepicker p-2"
+									id="pickupScheduledOn" th:field="*{farmer.pickupScheduledOnStr}"
+									th:value="${#dates.format(farmerDetails.farmer.pickupScheduledOn, 'dd-MM-yyyy hh:mm a')}"
+									required="required" readonly="readonly" >
+									</div>
+								</div>
+								<div class="col-sm-6">
+									<div class="form-group">
+										<label for="cullingCenter" class="text-gray-800">CULLING CENTER</label> 
+										<select class="browser-default custom-select"
+											data-width="100%" data-live-search="true"
+											title="Select Culling Center" id="cullingCenter"
+											th:field="*{farmer.cullingCenter.id}">
+											<option th:each="cullingcenter : ${cullingingcenters}" th:value="${cullingcenter.id}"
+												th:text="${cullingcenter.name}"></option>
+										</select>
+									</div>
+								</div>
+								
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div id="remarksAccordion" class="mt-4">
+				<div class="card">
+					<div class="card-header bg-primary" id="goingToHeading">
+						<button type="button" class="btn btn-sm text-white"
+							data-toggle="collapse" data-target="#remarksCollapse"
+							aria-expanded="true" aria-controls="remarksCollapse">Remarks</button>
+					</div>
+
+					<div id="remarksCollapse" class="collapse show"
+						aria-labelledby="goingToHeading"
+						data-parent="#remarksAccordion">
+						<div class="card-body">
+							<div class="row">
+								<div class="col-sm-12">
+									<div class="form-group">
+										<label for="accountNumber" class="text-gray-800">VERIFICATION REMARKS
+										</label>
+										<p th:text="*{farmer.verificationRemark}"></p>
+									</div>
+								</div>
+							</div>
+								<div class="row">
+								<div class="col-sm-12">
+									<div class="form-group">
+										<label for="accountNumber" class="text-gray-800">SCHEDULE REMARKS 
+										</label>
+										<textarea  class="form-control "
+											id="accept" th:field="*{farmer.scheduleRemark}"
+											maxlength="20" required="required"></textarea>
+									</div>
+								</div>
+							</div>
+							
+
+						</div>
+					</div>
+				</div>
+			</div>
+			
+
+
+			<div class="row mt-4">
+				<div class="col-sm-12 text-center">
+					<input type="submit" id="acceptEntry" class="btn btn-success"
+						value="Schedule" />
+				</div>
+			</div>
+		</form>
+	</main>
+
+	<footer class="footer">
+		<div class="container-fluid p-0">
+			<div class="d-flex flex-row">
+				<div
+					class="col-12 h-100 text-white d-flex align-items-center justify-content-end">
+					<a href="http://kran.co.in" target="_blank"
+						rel="noopener noreferrer"> <img
+						th:src="@{/images/logo_kran_white.png}"
+						style="width: 50px; height: 11px;" />
+					</a>
+				</div>
+			</div>
+		</div>
+	</footer>
+</body>
+</html>
+<script th:inline="javascript">
+$(document).ready(function () {
+	$('.datetimepicker').datetimepicker({
+		format: 'dd-mm-yyyy HH:ii P',
+		pickerPosition : 'bottom-right',
+		showMeridian: true,
+        autoclose: true,
+        todayBtn: true,
+		startDate : new Date()
+	});
+});
+	$(document).ready(function () {
+		$(".number-only").on("keypress keyup blur", function (event) {
+			$(this).val(
+				$(this).val().replace(/[^\d].+/, "")
+			);
+			if (event.which < 48 || event.which > 57) {
+				event.preventDefault();
+			}
+		});
+		
+		$(".decimalnumber-only").on("keypress keyup blur", function (event) {
+			$(this).val(
+				$(this).val().replace(/[^0-9\.]/g,'')
+			);
+			if ((event.which < 48 )|| (event.which > 57)) {
+				if(event.which!=46 ){
+					event.preventDefault();
+				}
+			}
+		});
+		totalAliveCount();
+		totalAliveAmount();
+	});
+
+	$(document).on("click", "#acceptEntry", function () {
+	});
+
+	var application = angular.module('newScreeningApp', []);
+	application.controller('NewScreeningController', function ($scope, $http) {
+
+		$scope.nativeDistrict = $("#nativeDistrict").val() ;
+		if (typeof $scope.nativeDistrict === 'undefined'
+			|| $scope.nativeDistrict == null) {
+			$scope.nativeDistrict = "0";
+		}
+		$scope.nativeDistrict = $scope.nativeDistrict + '';
+
+		$scope.goingToArea = $("input[name='farmer.nativeArea']:checked").val();
+		if (typeof $scope.goingToArea === 'undefined') {
+			$scope.goingToArea = "R";
+		}
+		
+	});
+
+	$(document).ready(function () {
+		$(".number-only").on("keypress keyup blur", function (event) {
+			$(this).val(
+				$(this).val().replace(/[^\d].+/, "")
+			);
+			if (event.which < 48 || event.which > 57) {
+				event.preventDefault();
+			}
+		});
+
+		$(document).on('keypress keyup blur', '.decimal', function (e) {
+			var character = String.fromCharCode(e.keyCode)
+			var newValue = this.value + character;
+			if (isNaN(newValue) || parseFloat(newValue) * 10 % 1 > 0) {
+				e.preventDefault();
+				return false;
+			}
+		});
+
+	});
+
+</script>
+<script type="text/javascript">
+function addNewRow(element) {
+ 	var res = $(element).closest('.animalDetailRow').find('[id^="addButton"]').attr('id').split("Button", 2);
+	var listCount=parseInt(res[1])+1;
+	$('[id^="addButton"]').hide();
+	var rowData =htCont;
+	rowData = rowData.replace(/count/g, listCount);
+	$(element).closest('.animalDetailRow').after($('<div class="animalDetailRow" ></div>').append(rowData));
+	$('[id="'+$('.animalDetailRow:last').find('[id^="addButton"]').attr('id')+'"]').show();
+	totalAliveCount();
+	}
+function removeRow(element,count,id) {
+	var listLength = $('[class="animalDetailRow"]').length;
+	if(listLength>1){
+	$("#deleteStatus"+count).val("Y");
+	$(element).closest(".animalDetailRow").remove();
+	$('[id^="addButton"]').hide();
+	$('[id="'+$('.animalDetailRow:last').find('[id^="addButton"]').attr('id')+'"]').show();
+	}else{
+		alert("Atleast One Animal Details Should be there for Claim!!")
+	}
+	totalAliveCount();
+}
+function totalAliveCount(){
+	var listLength = $('[class="animalDetailRow"]').length;
+	$('#numberOfAnimal').val(listLength);
+}
+function totalAliveAmount(){
+	var totalAmount=0;
+	$("[id^='amount'").each(function () {
+		totalAmount=parseFloat(totalAmount)+parseFloat(this.value);
+	});
+	$('#totalAmount').val(totalAmount);
+}
+
+function calculateAmount(id){
+// 	$('#amount'+id).val("0");
+	var liveWeight=$('#liveWeight'+id).val();
+	var heartGirth=$('#heartGirth'+id).val();
+	var length=$('#length'+id).val();
+	if((liveWeight=="0"||liveWeight=="")&&(heartGirth==0||heartGirth=="")&&(length==0||length=="")){
+		$('#heartGirth'+id).prop( "disabled", false );
+		$('#length'+id).prop( "disabled", false );
+		$('#liveWeight'+id).prop( "disabled", false );
+		$('#weighStatus'+id).val("N");
+		$('#liveWeight'+id).attr("required", "");
+		$('#heartGirth'+id).attr("required", "");
+		$('#length'+id).attr("required", "");
+	}
+	else if((liveWeight!="0"&&liveWeight!=""))	{
+	$('#heartGirth'+id).prop( "disabled", true );
+	$('#length'+id).prop( "disabled", true );
+	$('#liveWeight'+id).prop( "disabled", false );
+	$('#weighStatus'+id).val("Y");
+	$('#liveWeight'+id).attr("required", "required");
+	$('#heartGirth'+id).attr("required", "");
+	$('#length'+id).attr("required", "");
+	}else if((heartGirth!=0&&heartGirth!="")||(length!=0&&length!="")){
+	$('#heartGirth'+id).prop( "disabled", false );
+	$('#length'+id).prop( "disabled", false );
+	$('#liveWeight'+id).prop( "disabled", true );
+	$('#weighStatus'+id).val("N");
+	$('#liveWeight'+id).attr("required","required");
+	$('#heartGirth'+id).attr("required", "required");
+	$('#length'+id).attr("required", "");
+	}
+	var weighStatus=$('#weighStatus'+id).val();
+	$.ajax({
+		url : '../../district/getAmount?'+'liveWeight='+liveWeight+
+				'&weighStatus='+weighStatus+'&heartGirth='+heartGirth
+				+'&length='+length+'',
+		beforeSend : function() {
+		},
+		success : function(data) {
+			var result=parseFloat(data);
+			if(result==0){
+				alert("Wrong Value Detected")
+				if(weighStatus=="Y"){
+					$('#liveWeight'+id).val("");
+				}
+				else{
+					$('#heartGirth'+id).val("");
+					$('#length'+id).val("");
+				}
+			}else{
+			$('#amount'+id).val(data);
+			}
+			totalAliveAmount()
+		}
+	});
+		
+}
+</script>
+<script>
+/* Don't Delete tis is required for dynamic form */
+var htCont='<div class="row"><div class="col-sm-3"><div class="form-group">'
+	+'<input type="text" class="form-control " id="regIdcount" name="animalDetails[count].regId" maxlength="6"></div></div><div class="col-sm-2">'
+	+'<div class="form-group"><input type="text" class="form-control decimalnumber-only"	id="liveWeightcount" name="animalDetails[count].liveWeight"	maxlength="6" onchange="calculateAmount(count)"></div></div><div class="col-sm-2">'
+	+'<div class="form-group"><input type="text" class="form-control decimalnumber-only"'
+	+' id="heartGirthcount" name="animalDetails[count].heartGirth"	maxlength="6" onchange="calculateAmount(count)"></div></div><div class="col-sm-2">	<div class="form-group">'
+	+'<input type="text" class="form-control decimalnumber-only" id="lengthcount" name="animalDetails[count].length" 	maxlength="6" onchange="calculateAmount(count)"> <input	type="hidden" class="form-control " id="weighStatuscount"'
+	+' name="animalDetails[count].weighStatus"><input type="hidden" class="form-control "	id="deleteStatuscount"	name="animalDetails[count].deleteStatus">	</div></div>'
+	+'<div class="col-sm-2">	<div class="form-group">'
+	+'<input type="text" class="form-control "	id="amountcount" name="animalDetails[count].amount"	maxlength="6" value="0"	onchange="javascript:totalAliveAmount()" readonly="readonly">'
+	+'</div></div>'
+	+'<div class=" col-sm-1 addNewRow"	style="padding-right: 10px; display: inline-block;">	<div class="form-group" style="display: inline-block;">'
+	+'<a href="javascript:void(0);"	onclick="removeRow(this,'+"'count'"+",'null'"+');"	style="display: inline-block; text-align: right"> <font	style="font-size: 25px; color: red; padding-left: 10px;">'
+	+'<i class="fa fa-window-close" aria-hidden="true"></i></font></a>'
+	+'<a id="addButtoncount" href="javascript:void(0);"	onclick="javascript:addNewRow(this)" style="display: inline; text-align: right"> <font style="font-size: 25px; color: green;">'
+	+'<i class="fa fa-plus-square" aria-hidden="true"></i></font></a>'
+	+'</div></div></div>';
+
+</script>
+

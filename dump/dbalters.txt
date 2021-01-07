@@ -1,0 +1,470 @@
+ALTER TABLE `veterinaryassist`.`migrant_details` 
+RENAME TO  `veterinaryassist`.`farmer_details` ;
+ALTER TABLE `veterinaryassist`.`migrant_details_history` 
+RENAME TO  `veterinaryassist`.`farmer_details_history` ;
+ALTER TABLE `veterinaryassist`.`farmer_details` 
+DROP COLUMN `submit_status`,
+DROP COLUMN `public_user_status`,
+DROP COLUMN `migrant_category`,
+DROP COLUMN `identification_number`,
+DROP COLUMN `identification_type`,
+DROP COLUMN `quarantine_released_on`,
+DROP COLUMN `quarantine_released_by`,
+DROP COLUMN `regional_native`,
+DROP COLUMN `travel_station`,
+DROP COLUMN `travel_vehicle_number`,
+DROP COLUMN `arrived_On`,
+DROP COLUMN `flight_Id`,
+DROP COLUMN `travel_by`,
+DROP COLUMN `last_sample_collected_on`,
+DROP COLUMN `last_sample_collected_by`,
+DROP COLUMN `screening_sample_forwarded_on`,
+DROP COLUMN `screening_sample_forwarded_by`,
+DROP COLUMN `quarantine_facility_approved_on`,
+DROP COLUMN `quarantine_facility_approved_by`,
+DROP COLUMN `vehicle_support`,
+DROP COLUMN `sample_testing`,
+DROP COLUMN `tracking_application`,
+DROP COLUMN `screening_heart`,
+DROP COLUMN `screening_lung`,
+DROP COLUMN `screening_tension`,
+DROP COLUMN `screening_diabetes`,
+DROP COLUMN `screening_ailments`,
+DROP COLUMN `screening_breath`,
+DROP COLUMN `screening_fever`,
+DROP COLUMN `screening_cough`,
+DROP COLUMN `screening_symptoms`,
+DROP COLUMN `quarantined_on`,
+DROP COLUMN `quarantined_by`,
+DROP COLUMN `screening_sample_collected_on`,
+DROP COLUMN `screening_sample_collected_by`,
+DROP COLUMN `screening_sample`,
+DROP COLUMN `screened_on`,
+DROP COLUMN `screened_by`,
+DROP COLUMN `institution_id`,
+DROP COLUMN `home_police_station`,
+DROP COLUMN `home_block`,
+DROP COLUMN `no_of_days`,
+DROP COLUMN `quarantine_type`,
+DROP COLUMN `quarantine_at`,
+DROP COLUMN `temperature_celsius`,
+DROP COLUMN `body_temperature`,
+DROP COLUMN `screening_center`,
+DROP COLUMN `pregnant_status`,
+DROP COLUMN `physical_remarks`,
+DROP COLUMN `physical_kidney`,
+DROP COLUMN `physical_liver`,
+DROP COLUMN `physical_lung`,
+DROP COLUMN `physical_heart`,
+DROP COLUMN `physically_fit`,
+DROP COLUMN `present_address`,
+DROP COLUMN `present_pincode`,
+DROP COLUMN `present_district`,
+DROP COLUMN `present_state`,
+DROP COLUMN `migrant`,
+DROP COLUMN `identity_number`,
+DROP COLUMN `identity`,
+DROP COLUMN `occupation`,
+DROP INDEX `state` ,
+DROP INDEX `district` ;
+
+ALTER TABLE `veterinaryassist`.`farmer_details` 
+ADD COLUMN `account_number` VARCHAR(100) NULL AFTER `modified_On`,
+ADD COLUMN `ifsc_code` VARCHAR(100) NULL AFTER `account_number`;
+
+ALTER TABLE `veterinaryassist`.`farmer_details` 
+ADD COLUMN `no_of_animal` INT NULL DEFAULT '0' AFTER `ifsc_code`,
+ADD COLUMN `amount` DOUBLE(18,2) NULL DEFAULT '0' AFTER `no_of_animal`;
+
+ALTER TABLE `veterinaryassist`.`farmer_details_history` 
+DROP COLUMN `submit_status`,
+DROP COLUMN `public_user_status`,
+DROP COLUMN `migrant_category`,
+DROP COLUMN `identification_number`,
+DROP COLUMN `identification_type`,
+DROP COLUMN `quarantine_released_on`,
+DROP COLUMN `quarantine_released_by`,
+DROP COLUMN `regional_native`,
+DROP COLUMN `travel_station`,
+DROP COLUMN `travel_vehicle_number`,
+
+DROP COLUMN `travel_by`,
+DROP COLUMN `last_sample_collected_on`,
+DROP COLUMN `last_sample_collected_by`,
+DROP COLUMN `screening_sample_forwarded_on`,
+DROP COLUMN `screening_sample_forwarded_by`,
+DROP COLUMN `quarantine_facility_approved_on`,
+DROP COLUMN `quarantine_facility_approved_by`,
+DROP COLUMN `vehicle_support`,
+DROP COLUMN `sample_testing`,
+DROP COLUMN `tracking_application`,
+DROP COLUMN `screening_heart`,
+DROP COLUMN `screening_lung`,
+DROP COLUMN `screening_tension`,
+DROP COLUMN `screening_diabetes`,
+DROP COLUMN `screening_ailments`,
+DROP COLUMN `screening_breath`,
+DROP COLUMN `screening_fever`,
+DROP COLUMN `screening_cough`,
+DROP COLUMN `screening_symptoms`,
+DROP COLUMN `quarantined_on`,
+DROP COLUMN `quarantined_by`,
+DROP COLUMN `screening_sample_collected_on`,
+DROP COLUMN `screening_sample_collected_by`,
+DROP COLUMN `screening_sample`,
+DROP COLUMN `screened_on`,
+DROP COLUMN `screened_by`,
+DROP COLUMN `institution_id`,
+DROP COLUMN `home_police_station`,
+DROP COLUMN `home_block`,
+DROP COLUMN `no_of_days`,
+DROP COLUMN `quarantine_type`,
+DROP COLUMN `quarantine_at`,
+DROP COLUMN `temperature_celsius`,
+DROP COLUMN `body_temperature`,
+DROP COLUMN `screening_center`,
+DROP COLUMN `pregnant_status`,
+DROP COLUMN `physical_remarks`,
+DROP COLUMN `physical_kidney`,
+DROP COLUMN `physical_liver`,
+DROP COLUMN `physical_lung`,
+DROP COLUMN `physical_heart`,
+DROP COLUMN `physically_fit`,
+DROP COLUMN `present_address`,
+DROP COLUMN `present_pincode`,
+DROP COLUMN `present_district`,
+DROP COLUMN `present_state`,
+DROP COLUMN `migrant`,
+DROP COLUMN `identity_number`,
+DROP COLUMN `identity`,
+DROP COLUMN `occupation`,
+DROP INDEX `state` ,
+DROP INDEX `district` ;
+
+
+ALTER TABLE `veterinaryassist`.`farmer_details_history` 
+ADD COLUMN `account_number` VARCHAR(100) NULL AFTER `modified_On`,
+ADD COLUMN `ifsc_code` VARCHAR(100) NULL AFTER `account_number`;
+
+ALTER TABLE `veterinaryassist`.`farmer_details_history` 
+ADD COLUMN `no_of_animal` INT NULL DEFAULT '0' AFTER `ifsc_code`,
+ADD COLUMN `amount` DOUBLE(18,2) NULL DEFAULT '0' AFTER `no_of_animal`;
+
+CREATE TABLE `veterinaryassist`.`animal_details` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `farmer_id` INT NOT NULL,
+  `reg_id` VARCHAR(45) NULL,
+  `heart_girth` DOUBLE(18,2) NULL DEFAULT 0.00,
+  `length` DOUBLE(18,2) NULL DEFAULT 0.00,
+  `live_weight` DOUBLE(18,2) NULL DEFAULT 0.00,
+  `carcas_weight` DOUBLE(18,2) NULL DEFAULT 0.00,
+  `amount` INT NULL DEFAULT 0.00,
+  `remark` LONGTEXT NULL,
+  `modified_By` INT NULL,
+  `modified_On` DATETIME NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE INDEX `id_UNIQUE` (`id` ASC));
+  
+  CREATE TABLE `veterinaryassist`.`animal_details_history` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `details_id` INT NOT NULL,
+  `farmer_id` INT NOT NULL,
+  `reg_id` VARCHAR(45) NULL,
+  `heart_girth` DOUBLE(18,2) NULL DEFAULT 0.00,
+  `length` DOUBLE(18,2) NULL DEFAULT 0.00,
+  `live_weight` DOUBLE(18,2) NULL DEFAULT 0.00,
+  `carcas_weight` DOUBLE(18,2) NULL DEFAULT 0.00,
+  `amount` INT NULL DEFAULT 0.00,
+  `remark` LONGTEXT NULL,
+  `modified_By` INT NULL,
+  `modified_On` DATETIME NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE INDEX `id_UNIQUE` (`id` ASC));
+  
+  
+  CREATE TABLE `veterinaryassist`.`carcass_rate_setup` (
+  `id` INT(11) NOT NULL AUTO_INCREMENT,
+  `destruction_Category` VARCHAR(45) NOT NULL,
+  `from` INT(11) NOT NULL DEFAULT 0,
+  `to` INT(11) NOT NULL DEFAULT 0,
+  `rate` DOUBLE(18,2) NOT NULL DEFAULT 0.00,
+  `delete_Status` CHAR(1) NOT NULL DEFAULT 'N',
+  PRIMARY KEY (`id`));
+  
+INSERT INTO `veterinaryassist`.`carcass_rate_setup` (`destruction_Category`, `from`, `to`, `rate`, `delete_Status`) VALUES ('Piglet', '0', '15', '2200', 'N');
+INSERT INTO `veterinaryassist`.`carcass_rate_setup` (`destruction_Category`, `from`, `to`, `rate`) VALUES ('Grower/Finisher/Adult', '15', '40', '5800');
+INSERT INTO `veterinaryassist`.`carcass_rate_setup` (`destruction_Category`, `from`, `to`, `rate`) VALUES ('Finisher/Adult/Breeding/Sow', '40', '70', '8400');
+INSERT INTO `veterinaryassist`.`carcass_rate_setup` (`destruction_Category`, `from`, `to`, `rate`) VALUES ('Finisher/Adult/Breeding Boar/Sow', '70', '100', '12000');
+INSERT INTO `veterinaryassist`.`carcass_rate_setup` (`destruction_Category`, `from`, `to`, `rate`) VALUES ('Adult/Breeding Boar/Sow', '100', '10000', '15000');
+
+
+ALTER TABLE `veterinaryassist`.`animal_details` 
+ADD COLUMN `weigh_status` VARCHAR(2) NULL DEFAULT 'N' AFTER `modified_On`;
+
+ALTER TABLE `veterinaryassist`.`animal_details_history` 
+ADD COLUMN `weigh_status` VARCHAR(2) NULL DEFAULT 'N' AFTER `modified_On`;
+
+  
+  ALTER TABLE `veterinaryassist`.`carcass_rate_setup` 
+CHANGE COLUMN `from` `from_Kg` INT(11) NOT NULL DEFAULT '0' ,
+CHANGE COLUMN `to` `to_Kg` INT(11) NOT NULL DEFAULT '0' ;
+
+ALTER TABLE `veterinaryassist`.`carcass_rate_setup` 
+CHANGE COLUMN `from_Kg` `from_Kg` DOUBLE(18,2) NOT NULL DEFAULT '0.00' ,
+CHANGE COLUMN `to_Kg` `to_Kg` DOUBLE(18,2) NOT NULL DEFAULT '0.00' ,
+CHANGE COLUMN `rate` `rate` INT NOT NULL DEFAULT '0' ;
+  
+  ALTER TABLE `veterinaryassist`.`district_user_login` 
+ADD COLUMN `dvdeo_Status` CHAR(1) NOT NULL DEFAULT 'N' AFTER `privilege_level`,
+ADD COLUMN `dvo_Status` CHAR(1) NOT NULL DEFAULT 'N' AFTER `dvdeo_Status`,
+ADD COLUMN `dc_Status` CHAR(1) NOT NULL DEFAULT 'N' AFTER `dvo_Status`,
+ADD COLUMN `dcdeo_Status` CHAR(1) NOT NULL DEFAULT 'N' AFTER `dc_Status`;
+
+ALTER TABLE `veterinaryassist`.`animal_details_history` 
+ADD COLUMN `carcas_id` INT NULL AFTER `weigh_status`;
+
+ALTER TABLE `veterinaryassist`.`animal_details` 
+ADD COLUMN `delete_status` VARCHAR(2) NULL DEFAULT 'N' AFTER `carcas_id`;
+
+ALTER TABLE `veterinaryassist`.`animal_details_history` 
+ADD COLUMN `delete_status` VARCHAR(2) NULL DEFAULT 'N' AFTER `carcas_id`;
+  
+ ALTER TABLE `veterinaryassist`.`farmer_details` 
+ADD COLUMN `verification_remark` LONGTEXT NULL AFTER `amount`,
+ADD COLUMN `accept_remark` LONGTEXT NULL AFTER `verification_remark`;
+ 
+ ALTER TABLE `veterinaryassist`.`farmer_details_history` 
+ADD COLUMN `verification_remark` LONGTEXT NULL AFTER `amount`,
+ADD COLUMN `accept_remark` LONGTEXT NULL AFTER `verification_remark`;
+ 
+ ALTER TABLE `veterinaryassist`.`district_user_login` 
+ADD COLUMN `otp` VARCHAR(200) NULL AFTER `dcdeo_Status`;
+
+ ALTER TABLE `veterinaryassist`.`farmer_details` 
+ADD COLUMN `pickup_scheduled_by` INT NULL AFTER `accept_remark`,
+ADD COLUMN `pickup_scheduled_on` DATETIME NULL AFTER `pickup_scheduled_by`;
+
+ALTER TABLE `veterinaryassist`.`farmer_details_history` 
+ADD COLUMN `pickup_scheduled_by` INT NULL AFTER `accept_remark`,
+ADD COLUMN `pickup_scheduled_on` DATETIME NULL AFTER `pickup_scheduled_by`;
+
+ALTER TABLE `veterinaryassist`.`farmer_details` 
+ADD COLUMN `culling_center_id` INT NULL AFTER `pickup_scheduled_on`;
+
+ALTER TABLE `veterinaryassist`.`farmer_details_history` 
+ADD COLUMN `culling_center_id` INT NULL AFTER `pickup_scheduled_on`;
+
+
+
+CREATE TABLE `culling_centers` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `center_type` varchar(5) NOT NULL DEFAULT 'SC',
+  `name` varchar(450) NOT NULL,
+  `address` varchar(450) DEFAULT NULL,
+  `district` int(11) DEFAULT NULL,
+  `active_status` varchar(2) NOT NULL DEFAULT 'N',
+  `created_on` datetime DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=latin1;
+
+CREATE TABLE `culling_center_users` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `center` int(11) NOT NULL,
+  `name` varchar(45) DEFAULT NULL,
+  `mobile` bigint(20) DEFAULT NULL,
+  `email` varchar(90) DEFAULT NULL,
+  `username` varchar(45) NOT NULL,
+  `password` varchar(45) DEFAULT NULL,
+  `data_entry_operator` varchar(2) NOT NULL DEFAULT 'N',
+  `culling_officer` varchar(2) NOT NULL DEFAULT 'N',
+  `active_status` varchar(2) NOT NULL DEFAULT 'N',
+  `password_reset` varchar(2) NOT NULL DEFAULT 'N',
+  `password_reset_on` datetime DEFAULT NULL,
+  `otp` varchar(15) DEFAULT NULL,
+  `created_on` datetime DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=latin1;
+
+ALTER TABLE `veterinaryassist`.`farmer_details` 
+ADD COLUMN `fund_transfer_init_on` DATETIME NULL AFTER `culling_center_id`,
+ADD COLUMN `fund_transfer_init_by` INT NULL AFTER `fund_transfer_init_on`,
+ADD COLUMN `fund_transfer_on` DATETIME NULL AFTER `fund_transfer_init_by`,
+ADD COLUMN `fund_transfer_by` INT NULL AFTER `fund_transfer_on`,
+ADD COLUMN `collected_on` DATETIME NULL AFTER `fund_transfer_by`,
+ADD COLUMN `collected_by` INT NULL AFTER `collected_on`,
+ADD COLUMN `culled_on` DATETIME NULL AFTER `collected_by`,
+ADD COLUMN `culled_by` INT NULL AFTER `culled_on`;
+
+ALTER TABLE `veterinaryassist`.`farmer_details_history` 
+ADD COLUMN `fund_transfer_init_on` DATETIME NULL AFTER `culling_center_id`,
+ADD COLUMN `fund_transfer_init_by` INT NULL AFTER `fund_transfer_init_on`,
+ADD COLUMN `fund_transfer_on` DATETIME NULL AFTER `fund_transfer_init_by`,
+ADD COLUMN `fund_transfer_by` INT NULL AFTER `fund_transfer_on`,
+ADD COLUMN `collected_on` DATETIME NULL AFTER `fund_transfer_by`,
+ADD COLUMN `collected_by` INT NULL AFTER `collected_on`,
+ADD COLUMN `culled_on` DATETIME NULL AFTER `collected_by`,
+ADD COLUMN `culled_by` INT NULL AFTER `culled_on`;
+
+ALTER TABLE `veterinaryassist`.`farmer_details` 
+ADD COLUMN `schedule_remark` MEDIUMTEXT NULL AFTER `culled_by`,
+ADD COLUMN `collected_remark` MEDIUMTEXT NULL AFTER `schedule_remark`,
+ADD COLUMN `culled_remark` MEDIUMTEXT NULL AFTER `collected_remark`;
+
+ALTER TABLE `veterinaryassist`.`farmer_details_history` 
+ADD COLUMN `schedule_remark` MEDIUMTEXT NULL AFTER `culled_by`,
+ADD COLUMN `collected_remark` MEDIUMTEXT NULL AFTER `schedule_remark`,
+ADD COLUMN `culled_remark` MEDIUMTEXT NULL AFTER `collected_remark`;
+
+ALTER TABLE `veterinaryassist`.`users` 
+ADD COLUMN `finance_manager` VARCHAR(2) NULL AFTER `created_on`;
+
+ALTER TABLE `veterinaryassist`.`farmer_details` 
+ADD COLUMN `fund_transfer_status` VARCHAR(2) NULL DEFAULT 'N' AFTER `culled_remark`,
+ADD COLUMN `fund_transfer_reject_on` DATETIME NULL AFTER `fund_transfer_status`,
+ADD COLUMN `fund_transfer_reject_by` INT NULL AFTER `fund_transfer_reject_on`,
+ADD COLUMN `fund_transfer_reject_remark` LONGTEXT NULL AFTER `fund_transfer_reject_by`;
+
+ALTER TABLE `veterinaryassist`.`farmer_details_history` 
+ADD COLUMN `fund_transfer_status` VARCHAR(2) NULL DEFAULT 'N' AFTER `culled_remark`,
+ADD COLUMN `fund_transfer_reject_on` DATETIME NULL AFTER `fund_transfer_status`,
+ADD COLUMN `fund_transfer_reject_by` INT NULL AFTER `fund_transfer_reject_on`,
+ADD COLUMN `fund_transfer_reject_remark` LONGTEXT NULL AFTER `fund_transfer_reject_by`;
+
+
+CREATE TABLE `veterinaryassist`.`finance_report` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `name` MEDIUMTEXT NULL,
+  `report_date` DATETIME NULL,
+  `no_of_beneficiery` INT NULL,
+  `status` VARCHAR(2) NULL DEFAULT 'O',
+  `remark` LONGTEXT NULL,
+  `delete_status` VARCHAR(2) NULL DEFAULT 'N',
+  PRIMARY KEY (`id`),
+  UNIQUE INDEX `id_UNIQUE` (`id` ASC));
+
+ALTER TABLE `veterinaryassist`.`finance_report` 
+ADD COLUMN `generated_By` VARCHAR(45) NULL AFTER `delete_status`,
+ADD COLUMN `generated_On` DATETIME NULL AFTER `generated_By`;
+
+
+CREATE TABLE `veterinaryassist`.`finance_report_details` (
+  `id` INT NOT NULL,
+  `report_id` INT NULL,
+  `farmer_id` INT NULL,
+  `ifsc_code` VARCHAR(45) NULL,
+  `account_number` VARCHAR(45) NULL,
+  `status` VARCHAR(2) NULL DEFAULT 'N',
+  `tracking_id` VARCHAR(45) NULL,
+  `delete_status` VARCHAR(2) NULL DEFAULT 'N',
+  PRIMARY KEY (`id`));
+ALTER TABLE `veterinaryassist`.`finance_report_details` 
+ADD COLUMN `remark` VARCHAR(45) NULL AFTER `delete_status`;
+
+ALTER TABLE `veterinaryassist`.`finance_report_details` 
+ADD COLUMN `entry_On` VARCHAR(45) NULL AFTER `remark`;
+
+ALTER TABLE `veterinaryassist`.`finance_report_details` 
+ADD COLUMN `mobile` VARCHAR(45) NULL AFTER `entry_On`,
+ADD COLUMN `name` LONGTEXT NULL AFTER `mobile`;
+
+ALTER TABLE `veterinaryassist`.`finance_report_details` 
+ADD COLUMN `amount` DOUBLE(18,2) NULL DEFAULT 0.00 AFTER `name`;
+
+ALTER TABLE `veterinaryassist`.`finance_report` 
+ADD COLUMN `success_count` INT NULL AFTER `generated_On`,
+ADD COLUMN `reject_count` INT NULL AFTER `success_count`,
+ADD COLUMN `pending_count` INT NULL AFTER `reject_count`;
+
+ALTER TABLE `veterinaryassist`.`finance_report` 
+ADD COLUMN `file_name` LONGTEXT NULL AFTER `pending_count`;
+
+ALTER TABLE `veterinaryassist`.`finance_report_details` 
+CHANGE COLUMN `id` `id` INT(11) NOT NULL AUTO_INCREMENT ,
+ADD UNIQUE INDEX `id_UNIQUE` (`id` ASC);
+
+CREATE TABLE `epicenter_setup` (
+  `id` int(11) NOT NULL,
+  `district_id` int(11) DEFAULT NULL,
+  `name` mediumtext,
+  `delete_status` varchar(2) DEFAULT 'N',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+ALTER TABLE `veterinaryassist`.`epicenter_setup` 
+CHANGE COLUMN `id` `id` INT(11) NOT NULL AUTO_INCREMENT ,
+ADD UNIQUE INDEX `id_UNIQUE` (`id` ASC);
+
+
+ALTER TABLE `veterinaryassist`.`farmer_details` 
+ADD COLUMN `epi_center` INT NULL AFTER `fund_transfer_reject_remark`,
+ADD COLUMN `native_block` VARCHAR(200) NULL AFTER `epi_center`;
+
+
+ALTER TABLE `veterinaryassist`.`farmer_details_history` 
+ADD COLUMN `epi_center` INT NULL AFTER `fund_transfer_reject_remark`,
+ADD COLUMN `native_block` VARCHAR(200) NULL AFTER `epi_center`;
+
+ALTER TABLE `veterinaryassist`.`farmer_details` 
+ADD COLUMN `farm_category` VARCHAR(2) NULL AFTER `native_block`,
+ADD COLUMN `farmer_category` VARCHAR(2) NULL AFTER `farm_category`;
+
+
+ALTER TABLE `veterinaryassist`.`farmer_details_history` 
+ADD COLUMN `farm_category` VARCHAR(2) NULL AFTER `native_block`,
+ADD COLUMN `farmer_category` VARCHAR(2) NULL AFTER `farm_category`;
+
+ALTER TABLE `veterinaryassist`.`animal_details` 
+ADD COLUMN `breed` VARCHAR(2) NULL AFTER `delete_status`;
+
+
+ALTER TABLE `veterinaryassist`.`animal_details_history` 
+ADD COLUMN `breed` VARCHAR(2) NULL AFTER `delete_status`;
+
+ALTER TABLE `veterinaryassist`.`farmer_details` 
+ADD COLUMN `lat` VARCHAR(100) NULL AFTER `farmer_category`,
+ADD COLUMN `lng` VARCHAR(100) NULL AFTER `lat`;
+
+ALTER TABLE `veterinaryassist`.`farmer_details_history` 
+ADD COLUMN `lat` VARCHAR(100) NULL AFTER `farmer_category`,
+ADD COLUMN `lng` VARCHAR(100) NULL AFTER `lat`;
+
+ALTER TABLE `veterinaryassist`.`farmer_details` 
+ADD COLUMN `bank_name` VARCHAR(200) NULL AFTER `lng`,
+ADD COLUMN `bank_address` MEDIUMTEXT NULL AFTER `bank_name`;
+
+ALTER TABLE `veterinaryassist`.`farmer_details_history` 
+ADD COLUMN `bank_name` VARCHAR(200) NULL AFTER `lng`,
+ADD COLUMN `bank_address` MEDIUMTEXT NULL AFTER `bank_name`;
+
+ALTER TABLE `veterinaryassist`.`farmer_details` 
+ADD COLUMN `bank_branch` MEDIUMTEXT NULL AFTER `bank_address`;
+
+ALTER TABLE `veterinaryassist`.`farmer_details_history` 
+ADD COLUMN `bank_branch` MEDIUMTEXT NULL AFTER `bank_address`;
+
+ALTER TABLE `veterinaryassist`.`farmer_details` 
+ADD COLUMN `bank_city` VARCHAR(100) NULL AFTER `bank_branch`,
+ADD COLUMN `bank_district` VARCHAR(100) NULL AFTER `bank_city`,
+ADD COLUMN `bank_state` VARCHAR(100) NULL AFTER `bank_district`;
+
+
+ALTER TABLE `veterinaryassist`.`farmer_details_history` 
+ADD COLUMN `bank_city` VARCHAR(100) NULL AFTER `bank_branch`,
+ADD COLUMN `bank_district` VARCHAR(100) NULL AFTER `bank_city`,
+ADD COLUMN `bank_state` VARCHAR(100) NULL AFTER `bank_district`;
+
+CREATE TABLE `veterinaryassist`.`finance_report_upload` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `file_name` MEDIUMTEXT NULL,
+  `report_id` INT NULL,
+  `delete_status` VARCHAR(2) NULL DEFAULT 'N',
+  `update_status` VARCHAR(2) NULL DEFAULT 'N',
+  `upload_date` DATETIME NULL,
+  `update_time` DATETIME NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE INDEX `id_UNIQUE` (`id` ASC));
+ALTER TABLE `veterinaryassist`.`finance_report_upload` 
+CHANGE COLUMN `update_time` `update_date` DATETIME NULL DEFAULT NULL ;
+
+
+
+

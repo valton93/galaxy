@@ -1,0 +1,281 @@
+<div>
+	<form enctype="multipart/form-data"
+		th:action="@{/setup/saveScreeningCenterUserSetupDetails}"
+		method="post">
+
+		<input type="hidden" th:field="*{screeningCenterUsers.fileStatus}"
+			id="status"> <input type="hidden"
+			th:field="*{screeningCenterUsers.id}" id="ids">
+
+		<div class="col-sm-12">
+			<div class="row mb-3 mt-2">
+				<div class="col-sm-12">
+					<div class="form-check form-check-inline">
+						<div class="custom-control custom-radio">
+							<input type="radio" id="customRadio1" name="registrationRadio"
+								value="F" class="custom-control-input" checked="checked"
+								onchange="getForm()"> <label
+								class="custom-control-label" for="customRadio1">Adding
+								By Form</label>
+						</div>
+					</div>
+					<!-- <div class="form-check form-check-inline">
+						<div class="custom-control custom-radio">
+							<input type="radio" id="customRadio2" name="registrationRadio"
+								class="custom-control-input" value="P" onchange="getForm()">
+							<label class="custom-control-label" for="customRadio2">Adding
+								By porting</label>
+						</div>
+					</div> -->
+				</div>
+			</div>
+			<div class="row port" style="display: none;">
+				<div class="col-sm-12 mb-2">
+					<label for="exampleInputEmail1" class="text-gray-800">
+						Attach File Here (<small class="text-danger font-italic">
+							Your file should be in .xls format </small>)
+					</label> <input type="file" id="my_file"
+						th:field="*{screeningCenterUsers.registrationForm}"
+						accept="application/vnd.ms-excel"
+						class="form-control form-control-sm">
+				</div>
+			</div>
+			<div class="row form">
+				<div class="col-sm-12">
+					<div class="form-group">
+						<label for="exampleInputEmail1" class="text-gray-800">Screening
+							Center</label> <select class="browser-default custom-select"
+							id="screeningCenterid"
+							th:field="*{screeningCenterUsers.center.id}" required>
+							<option value="0">--Select--</option>
+							<option th:each="screeningCenter : ${screeningCentersList}"
+								th:value="${screeningCenter.id}"
+								th:text="${screeningCenter.name}"></option>
+						</select>
+					</div>
+				</div>
+			</div>
+			<div class="row form">
+				<div class="col-sm-12">
+					<div class="form-group">
+						<label for="exampleInputEmail1" class="text-gray-800">Name</label>
+						<input th:field="*{screeningCenterUsers.name}" type="text"
+							class="form-control" id="name" aria-describedby="emailHelp"
+							placeholder="Enter Name">
+					</div>
+				</div>
+			</div>
+			<div class="row form">
+				<div class="col-sm-6">
+					<div class="form-group">
+						<label for="exampleInputEmail1" class="text-gray-800">Mobile
+							Number</label> <input th:field="*{screeningCenterUsers.mobile}"
+							type="text" class="form-control" id="exampleInputEmail1"
+							aria-describedby="emailHelp" placeholder="Enter Mobile Number">
+					</div>
+				</div>
+				<div class="col-sm-6">
+					<div class="form-group">
+						<label for="exampleInputEmail1" class="text-gray-800">Email
+							Id</label> <input th:field="*{screeningCenterUsers.email}" type="text"
+							class="form-control" id="exampleInputEmail1"
+							aria-describedby="emailHelp" placeholder="Enter Email Id">
+					</div>
+				</div>
+			</div>
+			<div class="row form">
+				<div class="col-sm-6">
+					<div class="form-group">
+						<label for="exampleInputEmail1" class="text-gray-800">Username</label>
+						<input th:field="*{screeningCenterUsers.userName}" type="text"
+							class="form-control" id="username" aria-describedby="emailHelp"
+							placeholder="Enter username">
+					</div>
+				</div>
+				<!-- <div class="col-sm-6">
+					<div class="form-group">
+						<label for="exampleInputEmail1" class="text-gray-800">Password</label> <input
+							th:field="*{screeningCenterUsers.password}" type="text"
+							class="form-control" id="exampleInputEmail1"
+							aria-describedby="emailHelp" placeholder="Enter password">
+					</div>
+				</div> -->
+			</div>
+
+			<div class="row form">
+				<div class="col-sm-12">
+					<label for="exampleInputEmail1" class="text-gray-800">Select
+						Roles</label>
+					<div class="row">
+						<div class="col-sm-6">
+							<div class="custom-control custom-checkbox">
+								<input type="checkbox" class="custom-control-input"
+									th:field="*{screeningCenterUsers.dataEntryOperatorCheckBox}"
+									id="dataEntryOperator"> <label
+									class="custom-control-label" for="dataEntryOperator">Data
+									Entry Operator</label>
+							</div>
+							<div class="custom-control custom-checkbox">
+								<input type="checkbox" class="custom-control-input"
+									th:field="*{screeningCenterUsers.screeningUserCheckBox}"
+									id="screeningUserCheck"> <label
+									class="custom-control-label" for="screeningUserCheck">Screening
+									User</label>
+							</div>
+							<div class="custom-control custom-checkbox">
+								<input type="checkbox" class="custom-control-input"
+									th:field="*{screeningCenterUsers.sampleCollectorCheckBox}"
+									id="sampleCollector"> <label
+									class="custom-control-label" for="sampleCollector">Sample
+									Collector</label>
+							</div>
+						</div>
+						<div class="col-sm-6">
+							<div class="custom-control custom-checkbox">
+								<input type="checkbox" class="custom-control-input"
+									th:field="*{screeningCenterUsers.coordinatorCheckBox}"
+									id="coordinator"> <label class="custom-control-label"
+									for="coordinator">Coordinator</label>
+							</div>
+							<div class="custom-control custom-checkbox">
+								<input type="checkbox" class="custom-control-input"
+									th:field="*{screeningCenterUsers.facilityAdministratorCheckBox}"
+									id="facilityAdministrator"> <label
+									class="custom-control-label" for="facilityAdministrator">Facility
+									Administrator</label>
+							</div>
+							<div class="custom-control custom-checkbox">
+								<input type="checkbox" class="custom-control-input"
+									th:field="*{screeningCenterUsers.sampleCollectorManagerCheckBox}"
+									id="sampleCollectorManager"> <label
+									class="custom-control-label" for="sampleCollectorManager">Sample
+									Collector Manager</label>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div class="row mt-4 mb-2">
+			<div class="col-sm-12 text-center"
+				th:if='${screeningCenterUsers.id!=null}'>
+				<button style="text-align: center;" type="submit"
+					class="btn btn-sm btn-primary" onclick="return validateForm()">Update</button>
+			</div>
+			<div class="col-sm-12 text-center"
+				th:if='${screeningCenterUsers.id==null}'>
+				<button style="text-align: center;" type="submit"
+					class="btn btn-sm btn-primary" onclick="return validateForm()">Register</button>
+			</div>
+		</div>
+	</form>
+</div>
+</div>
+
+<script th:inline="javascript">
+	$(document)
+			.ready(
+					function() {
+						var radioValue = $(
+								"input[name='registrationRadio']:checked")
+								.val();
+						$('#status').val(radioValue);
+						if (radioValue == 'F') {
+							$('#port').hide();
+						}
+
+						$("#my_file")
+								.change(
+										function() {
+											var validExts = new Array(".xls");
+											var fileExt = $("#my_file").val();
+											fileExt = fileExt.substring(fileExt
+													.lastIndexOf('.'));
+											if (validExts.indexOf(fileExt) < 0) {
+												alert("Invalid file selected, valid files is of "
+														+ validExts.toString()
+														+ " types.");
+												$("#my_file").val("");
+												return false;
+											} else {
+												return true;
+											}
+										});
+					});
+
+	function getForm() {
+		var radioValue = $("input[name='registrationRadio']:checked").val();
+		$('#status').val(radioValue);
+		if (radioValue == 'F') {
+			$('.port').hide();
+			$('.form').show();
+		}
+		if (radioValue == 'P') {
+			$('.form').hide();
+			$('.port').show();
+		}
+	}
+
+	function isNumber(event) {
+		var numeric = new RegExp("^[0-9\b]+$");
+		var keyCode = String.fromCharCode(!event.charCode ? event.which
+				: event.charCode);
+		if (!numeric.test(keyCode)) {
+			event.preventDefault();
+			return false;
+		}
+	}
+
+	function validateForm() {
+		var radioValue = $("input[name='registrationRadio']:checked").val();
+		if (radioValue == "F") {
+			var presentDistrict = $("#screeningCenterid").val();
+			if (presentDistrict == 0 || presentDistrict == null) {
+				alert('Please choose the Screening Center');
+				$("#screeningCenterid").focus();
+				return false;
+			}
+			var applicantName = $("#name").val().trim();
+			if (applicantName == '' || applicantName == null) {
+				alert('Please enter the name');
+				$("#name").focus();
+				return false;
+			}
+			var applicantName = $("#username").val().trim();
+			if (applicantName == '' || applicantName == null) {
+				alert('Please enter the username');
+				$("#username").focus();
+				return false;
+			}
+			/* var name = $('[name="name"]').val();
+			if (name == "") {
+				alert("Please Provide name")
+				return false;
+			}
+			var mobile = $('[name="mobile"]').val();
+			if (mobile == "") {
+				alert("Please Provide Mobile Number")
+				return false;
+			} else {
+				if (mobile.length < 10) {
+					alert("Invalid Mobile number")
+					return false;
+				}
+			}
+			var email = $('[name="email"]').val();
+			if (email == "") {
+				alert("Please Provide Email Id")
+				return false;
+			} */
+		}
+		if (radioValue == "P") {
+			var regFile = $("input[name='registrationForm']:first").val();
+			if (regFile == "") {
+				alert("Upload file...!")
+				return false;
+			}
+		}
+		return true;
+	}
+</script>

@@ -1,0 +1,855 @@
+<!DOCTYPE html>
+<html xmlns:layout="http://www.w3.org/1999/xhtml" layout:decorate="~{layouts/layout}">
+<head>
+<title>Vet Cares - Application Details</title>
+<!-- <link rel="stylesheet" th:href="@{/css/dashboard-style.css}" /> -->
+<script th:src="@{/Highcharts804/code/highcharts.js}"></script>
+<script th:src="@{/Highcharts804/code/modules/exporting.js}"></script>
+<script th:src="@{/Highcharts804/code/modules/export-data.js}"></script>
+<script th:src="@{/Highcharts804/code/modules/accessibility.js}"></script>
+<style type="text/css">
+.nav-tabs .nav-item.show .nav-link, .nav-tabs .nav-link.active {
+	color: #495057;
+	background-color: #fafbfc;
+	border-color: #dee2e6 #dee2e6 #fafbfc;
+}
+</style>
+
+
+<script type="text/javascript">
+var distId;
+	$(document).ready(function() {
+		refreshIt($('#nativeDistrict').val());
+		distId=$('#nativeDistrict').val();
+		$('#nativeDistrict').val(distId);
+	});
+	function refreshIt(districtId){
+		distId=districtId;
+		getCountForDashboardAjax(districtId);
+		getCountForApplicationAjax(districtId);
+		getCountForBeneficiariesAjax(districtId);
+		getCountForFundDistributionAjax(districtId);
+		getCountForCollectionAndCullingApplicationAjax(districtId);
+		getCountForCollectionAndCullingAnimalAjax(districtId);
+		getDateWiseApplicationChart(districtId);
+
+	}
+</script>
+<script type="text/javascript">
+	function getCountForDashboardAjax(districtId){
+		$.ajax({
+			url : '../dashboard/getCountForDashboardAjax',
+			data : {
+				id:districtId
+				},
+			beforeSend : function() {	
+				},
+			success : function(data) {
+				 if(data == null || !data.length){
+					upto15kg="--";a15kgto40kg="--";a40kgto70kg="--";a70kgto100kg="--";above100kg="--"; totalPig="--"; 					
+				} else {
+					upto15kg=data[0];a15kgto40kg=data[1];a40kgto70kg=data[2];a70kgto100kg=data[3];above100kg=data[4];
+					totalPig=parseFloat(upto15kg)+parseFloat(a15kgto40kg)+parseFloat(a40kgto70kg)+parseFloat(a70kgto100kg)+parseFloat(above100kg)
+				}
+				$('#upto15kg').html(upto15kg);$('#15kgto40kg').html(a15kgto40kg);$('#40kgto70kg').html(a40kgto70kg);$('#70kgto100kg').html(a70kgto100kg);$('#above100kg').html(above100kg); 
+				$('#totalPig').html(totalPig);
+			},error: function(xhr) { // if error occured
+				$.log('XHR ERROR ' + XMLHttpRequest.status);
+				$('#upto15kg').html("--");$('#15kgto40kg').html("--");$('#40kgto70kg').html("--");$('#70kgto100kg').html("--");$('#above100kg').html("--");
+				$('#totalPig').html("--");
+			}
+		});
+	}
+	function getCountForApplicationAjax(districtId){
+		$.ajax({
+			url : '../dashboard/getCountForApplicationAjax',
+			data : {
+				id:districtId
+				},
+			beforeSend : function() {	
+				},
+			success : function(data) {
+				 if(data == null || !data.length){
+						totalApp="--";submittedApp="--";verifiedApp="--";approvedApp="--";submittedNotVerified="--";verifiedNotApproved="--";
+				} else {
+					totalApp=data[0];submittedApp=data[1];verifiedApp=data[2];approvedApp=data[3];
+					submittedNotVerified=data[4];verifiedNotApproved=data[5];
+				}
+				$('#totalApp').html(totalApp);$('#submittedApp').html(submittedApp);$('#verifiedApp').html(verifiedApp);
+				$('#approvedApp').html(approvedApp);$('#submittedNotVerified').html(submittedNotVerified);
+				$('#verifiedNotApproved').html(verifiedNotApproved); 
+			
+			},error: function(xhr) { // if error occured
+				$.log('XHR ERROR ' + XMLHttpRequest.status);
+				$('#totalApp').html("--");$('#submittedApp').html("--");$('#verifiedApp').html("--");$('#approvedApp').html("--");
+				$('#submittedNotVerified').html("--");$('#verifiedNotApproved').html("--"); 
+		    }
+		});
+	}
+</script>
+<script type="text/javascript">
+function getCountForBeneficiariesAjax(districtId){
+	$.ajax({
+		url : '../dashboard/getCountForBeneficiariesAjax',
+		data : {
+			id:districtId
+			},
+		beforeSend : function() {	
+			},
+		success : function(data) {
+			 if(data == null || !data.length){
+				 approvedBenf="--";ftniBenf="--";ftBenf="--";ftpBenf="--";ftfBenf="--";
+			} else {
+				approvedBenf=data[0];ftniBenf=data[1];ftBenf=data[2];ftpBenf=data[3];
+				ftfBenf=data[4];
+			}
+			$('#approvedBenf').html(approvedBenf);$('#ftniBenf').html(ftniBenf);$('#ftBenf').html(ftBenf);
+			$('#ftpBenf').html(ftpBenf);$('#ftfBenf').html(ftfBenf);
+		
+		},error: function(xhr) { // if error occured
+			$.log('XHR ERROR ' + XMLHttpRequest.status);
+			$('#approvedBenf').html("--");$('#ftniBenf').html("--");$('#ftBenf').html("--");$('#ftpBenf').html("--");
+			$('#ftfBenf').html("--"); 
+	    }
+	});
+}
+</script>
+<script type="text/javascript">
+function getCountForFundDistributionAjax(districtId){
+	$.ajax({
+		url : '../dashboard/getCountForFundDistributionAjax',
+		data : {
+			id:districtId
+			},
+		beforeSend : function() {	
+			},
+		success : function(data) {
+			 if(data == null || !data.length){
+				 approvedAmt="--";ftniAmt="--";ftAmt="--";ftpAmt="--";ftfAmt="--";
+			} else {
+				approvedAmt=data[0];ftniAmt=data[1];ftAmt=data[2];ftpAmt=data[3];
+				ftfAmt=data[4];
+			}
+			$('#approvedAmt').html(approvedAmt);$('#ftniAmt').html(ftniAmt);$('#ftAmt').html(ftAmt);
+			$('#ftpAmt').html(ftpAmt);$('#ftfAmt').html(ftfAmt);
+		
+		},error: function(xhr) { // if error occured
+			$.log('XHR ERROR ' + XMLHttpRequest.status);
+			$('#approvedAmt').html("--");$('#ftniAmt').html("--");$('#ftAmt').html("--");$('#ftpAmt').html("--");
+			$('#ftfAmt').html("--"); 
+	    }
+	});
+}
+</script>
+<script type="text/javascript">
+function getCountForCollectionAndCullingApplicationAjax(districtId){
+	$.ajax({
+		url : '../dashboard/getCountForCollectionAndCullingApplicationAjax',
+		data : {
+			id:districtId
+			},
+		beforeSend : function() {	
+			},
+		success : function(data) {
+			 if(data == null || !data.length){
+					psApp="--";spApp="--";ccApp="--";cpApp="--";cucApp="--";cupApp="--";
+			} else {
+				psApp=data[0];spApp=data[1];ccApp=data[2];cpApp=data[3];
+				cucApp=data[4];cupApp=data[5];
+			}
+			$('#psApp').html(psApp);$('#spApp').html(spApp);$('#cpApp').html(cpApp);
+			$('#cucApp').html(cucApp);$('#cupApp').html(cupApp);
+			$('#ccApp').html(ccApp); 
+		
+		},error: function(xhr) { // if error occured
+			$.log('XHR ERROR ' + XMLHttpRequest.status);
+			$('#psApp').html("--");$('#spApp').html("--");$('#ccApp').html("--");$('#cpApp').html("--");
+			$('#cucApp').html("--");$('#cupApp').html("--"); 
+	    }
+	});
+}
+</script>
+<script type="text/javascript">
+function getCountForCollectionAndCullingAnimalAjax(districtId){
+	$.ajax({
+		url : '../dashboard/getCountForCollectionAndCullingAnimalAjax',
+		data : {
+			id:districtId
+			},
+		beforeSend : function() {	
+			},
+		success : function(data) {
+			 if(data == null || !data.length){
+					psAni="--";spAni="--";ccAni="--";cpAni="--";cucAni="--";cupAni="--";
+			} else {
+				psAni=data[0];spAni=data[1];ccAni=data[2];cpAni=data[3];
+				cucAni=data[4];cupAni=data[5];
+			}
+			$('#psAni').html(psAni);$('#spAni').html(spAni);$('#cpAni').html(cpAni);
+			$('#cucAni').html(cucAni);$('#cupAni').html(cupAni);
+			$('#ccAni').html(ccAni); 
+		
+		},error: function(xhr) { // if error occured
+			$.log('XHR ERROR ' + XMLHttpRequest.status);
+			$('#psAni').html("--");$('#spAni').html("--");$('#ccAni').html("--");$('#cpAni').html("--");
+			$('#cucAni').html("--");$('#cupAni').html("--"); 
+	    }
+	});
+}
+</script>
+<script>
+
+function getDateWiseApplicationChart(districtId) {
+    $.ajax({
+        url : '../dashboard/getDateWiseApplicationChart',
+        data : {
+			id:districtId
+			},
+        beforeSend : function() {
+        	$("#containerApplicationChart").html("<div align='center' style='font-size:20px;'><img src='getloadingImage' alt='Loading, Please Wait..' ></img></div>");
+        },
+        success : function(result) {
+        	dateWiseApplicationChart(result.seriesData,result.dates);
+        }
+    });
+}
+function dateWiseApplicationChart(seriesData,seriesHeading){
+	seriesData = eval('[' + seriesData+ ']');
+	seriesHeading=eval('[' + seriesHeading+ ']');
+	Highcharts.chart('containerApplicationChart', {
+	    title: {
+	        text: ''
+	    },
+	    subtitle: {
+	        text: ''
+	    },
+	    yAxis: {
+	        title: {
+	            text: 'Count In Numbers'
+	        }
+	    },
+	    xAxis: {
+	        categories: seriesHeading,
+	        crosshair: true,
+	      
+	    },
+	    legend: {
+	        layout: 'vertical',
+	        align: 'right',
+	        verticalAlign: 'middle'
+	       
+	    },
+	    tooltip: {
+	        headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
+	        pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
+	            '<td style="padding:0"><b>{point.y:1f}</b></td></tr>',
+	        footerFormat: '</table>',
+	        shared: true,
+	        useHTML: true
+	    },
+	    plotOptions: {
+	        series: {
+	            label: {
+	                connectorAllowed: false,pointWidth: 150
+	            }
+	        }
+	    },
+	    credits: {enabled: false}, 
+	    exporting: {
+	        buttons: {
+		          contextButton: {
+		            menuItems: ['downloadPNG', 'downloadJPEG', 'downloadPDF', 'downloadSVG','downloadCSV',],
+		          },
+		        },
+		   },
+	    series: seriesData,
+	    colors: ['#4CAF50','#FF9800','#E86850'],
+	    responsive: {
+	        rules: [{
+	            condition: {
+	                maxWidth: 500
+	            },
+	            chartOptions: {
+	                legend: {
+	                    layout: 'horizontal',
+	                    align: 'center',
+	                    verticalAlign: 'bottom'
+	                }
+	            }
+	        }]
+	    }
+
+	});
+
+}
+</script>
+</head>
+
+<body  style="background-color: #fafbfc">
+	<main role="main" class="container-fluid " layout:fragment="content">
+	<div class="row" style="background: none;margin: 10px 0px 20px 0px;">
+		<div class="col-sm-12 col-md-12 col-xl-12 col-lg-12" align="right">
+				<select 
+					class="browser-default custom-select col-xl-3 col-lg-3" id="nativeDistrict" title="Select Native District"	
+					onchange="refreshIt(this.value);" th:field="*{filterVO.districtId}"
+					data-width="100%" data-live-search="true" data-ng-model="nativeDistrict">
+					<option value="0">All Districts</option>
+					<option th:each="district : ${nativedistricts}"	th:value="${district.id}" th:text="${district.districtName}"></option>
+				</select>
+		</div>
+	</div>
+	
+<!-- 	Top Cards -->
+		<div class="row">
+			<div
+				class="col-sm-12 col-md-6 col-lg-4 col-xl-2 d-flex align-items-stretch">
+				<div class="card card-stats">
+					<div class="card-header card-header-info card-header-icon"
+						style="min-height: 70px;" data-header-animation="true">
+						<div class="card-icon">
+							<i class="fas fa-pig"></i>
+						</div>
+						<p class="card-category">Total Pigs</p>
+						<h3 class="card-title">
+							<span id="totalPig">--</span> <small>Nos.</small>
+						</h3>
+					</div>
+					<div class="card-footer">
+						<div class="stats">
+							<i class="material-icons">local_offer</i> <span
+								class=" text-muted font-weight-bold mb-0 "> All Group of
+								Pigs</span>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<div
+				class="col-sm-12 col-md-6 col-lg-4 col-xl-2 d-flex align-items-stretch ">
+				<div class="card card-stats">
+					<div class="card-header card-header-primary card-header-icon"
+						style="min-height: 70px;" data-header-animation="true">
+						<div class="card-icon">
+							<i class="fas fa-pig"></i>
+						</div>
+						<p class="card-category">Piglets</p>
+						<h3 class="card-title">
+							<span id="upto15kg">--</span> <small>Nos.</small>
+						</h3>
+					</div>
+					<div class="card-footer">
+						<div class="stats">
+							<i class="material-icons">local_offer</i> <span
+								class=" text-muted font-weight-bold mb-0 "> Carcass
+								Weight: Upto 15kg</span>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div
+				class="col-sm-12 col-md-6 col-lg-4 col-xl-2 d-flex align-items-stretch ">
+				<div class="card card-stats">
+					<div class="card-header card-header-success card-header-icon"
+						style="min-height: 70px;" data-header-animation="true">
+						<div class="card-icon">
+							<i class="fas fa-pig"></i>
+						</div>
+						<p class="card-category">Adult/Finisher/Grower</p>
+						<h3 class="card-title">
+							<span id="15kgto40kg">--</span> <small>Nos.</small>
+						</h3>
+					</div>
+					<div class="card-footer">
+						<div class="stats">
+							<i class="material-icons">local_offer</i> <span
+								class=" text-muted font-weight-bold mb-0 "> Carcass
+								Weight: 15kg-40kg </span>
+
+						</div>
+					</div>
+				</div>
+			</div>
+
+
+			<div
+				class="col-sm-12 col-md-6 col-lg-4 col-xl-2 d-flex align-items-stretch">
+				<div class="card card-stats">
+					<div class="card-header card-header-warning card-header-icon"
+						style="min-height: 70px;" data-header-animation="true">
+						<div class="card-icon">
+							<i class="fas fa-pig"></i>
+						</div>
+						<p class="card-category">Adult/Finisher /Breeding/Sow</p>
+						<h3 class="card-title">
+							<span id="40kgto70kg">--</span> <small>Nos.</small>
+						</h3>
+					</div>
+					<div class="card-footer">
+						<div class="stats">
+							<i class="material-icons">local_offer</i> <span
+								class=" text-muted font-weight-bold mb-0 "> Carcass
+								Weight: 40kg-70kg </span>
+
+						</div>
+					</div>
+				</div>
+			</div>
+
+
+
+			<div
+				class="col-sm-12 col-md-6 col-lg-4 col-xl-2  d-flex align-items-stretch">
+				<div class="card card-stats">
+					<div class="card-header card-header-rose card-header-icon"
+						style="min-height: 70px;" data-header-animation="true">
+						<div class="card-icon">
+							<i class="fas fa-pig"></i>
+						</div>
+						<p class="card-category">Adult/Finisher /Boar/Sow</p>
+						<h3 class="card-title">
+							<span id="70kgto100kg">--</span> <small>Nos.</small>
+						</h3>
+					</div>
+					<div class="card-footer">
+						<div class="stats">
+							<i class="material-icons">local_offer</i> <span
+								class=" text-muted font-weight-bold mb-0 "> Carcass
+								Weight: 70kg-100kg </span>
+
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<div
+				class="col-sm-12 col-md-6 col-lg-4 col-xl-2 d-flex align-items-stretch">
+				<div class="card card-stats">
+					<div class="card-header card-header-danger card-header-icon"
+						style="min-height: 70px;" data-header-animation="true">
+						<div class="card-icon">
+							<i class="fas fa-pig"></i>
+						</div>
+						<p class="card-category">Adult/ Breeding Boar/Sow</p>
+						<h3 class="card-title">
+							<span id="above100kg">--</span> <small>Nos.</small>
+						</h3>
+					</div>
+					<div class="card-footer">
+						<div class="stats">
+							<i class="material-icons">local_offer</i> <span
+								class=" text-muted font-weight-bold mb-0 "> Carcass
+								Weight: Above 100kg </span>
+
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<!-- 	Top Cards End -->
+
+
+
+		<div class="row"	>
+			
+			<!-- Applications Information Start -->
+			<div class="col-sm-12 col-md-12 col-lg-3 col-xl-3 d-flex align-items-stretch">
+				<div class="card pl1px pr1px ml2px mr2px mb5px" style="width: 98%; ">
+					<div class="card-header card-header-primary card-header-icon" data-header-animation="true">
+						<div class="card-icon pt10px pr10px pb10px pl10px fs16px fwb">
+							<i class="fas fa-indent"></i>
+							Application
+						</div>
+					</div>
+					
+					<div class="card-body pt10px pr10px pb20px pl10px" >
+						<div class="row">
+							<div class="col-sm-12 pt10px pb10px pr10px pl10px">
+								<div class="info-box" > 
+									<div class="icon iconText bg-grey1 pt8px" >
+										<span id="submittedApp"></span>
+									</div>
+									<div class="content">
+										<div class="txtLabel">Submitted Application</div>
+									</div>
+								</div>
+							</div>
+							<div class="col-sm-12 pt10px pb10px pr10px pl10px">
+								<div class="info-box ">
+									<div class="icon iconText bg-grey2 pt8px">
+										<span id="verifiedApp"></span>
+									</div>
+									<div class="content">
+										<div class="txtLabel">Verified Application</div>
+									</div>
+								</div>
+							</div>
+							<div class="col-sm-12 pt10px pb10px pr10px pl10px">
+								<div class="info-box">
+									<div class="icon iconText bg-grey4 pt8px">
+										<span id="submittedNotVerified"></span>
+									</div>
+									<div class="content">
+										<div class="txtLabel">Pending Verification</div>
+									</div>
+								</div>
+							</div>
+
+							<div class="col-sm-12 pt10px pb10px pr10px pl10px">
+								<div class="info-box">
+									<div class="icon iconText bg-grey3 pt8px" >
+										<span id="approvedApp"></span>
+									</div>
+									<div class="content">
+										<div class="txtLabel">Approved Application</div>
+									</div>
+								</div>
+							</div>
+							
+							<div class="col-sm-12 pt10px pb10px pr10px pl10px">
+								<div class="info-box">
+									<div class="icon iconText bg-grey5 pt8px" >
+										<span id="verifiedNotApproved"></span>
+									</div>
+									<div class="content">
+										<div class="txtLabel">Pending Approval</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+<!-- Applications Information End -->
+
+
+<!-- Applications Beneficieries Start -->
+			<div class="col-sm-12 col-md-12 col-lg-3 col-xl-3 d-flex align-items-stretch">
+				<div class="card pl1px pr1px ml2px mr2px mb5px" style="width: 98%; ">
+					<div class="card-header card-header-primary card-header-icon" data-header-animation="true">
+						<div class="card-icon pt10px pr10px pb10px pl10px fs16px fwb">
+						<i class="far fa-users"></i>
+							Beneficiaries
+						</div>
+					</div>
+					
+					<div class="card-body pt10px pr10px pb20px pl10px" >
+						<div class="row">
+						
+						<div class="col-sm-12 pt10px pb10px pr10px pl10px">
+								<div class="info-box">
+									<div class="icon iconText bg-grey4 pt8px" >
+										<span id="approvedBenf">--</span>
+									</div>
+									<div class="content">
+										<div class="txtLabel">Approved Beneficiaries</div>
+									</div>
+								</div>
+							</div>
+						<div class="col-sm-12 pt10px pb10px  pr10px pl10px">
+								<div class="info-box">
+									<div class="icon iconText bg-grey5 pt8px" >
+										<span id="ftniBenf">--</span>
+									</div>
+									<div class="content">
+										<div class="txtLabel">Fund Transfer Not Initiated</div>
+									</div>
+								</div>
+							</div>
+						
+							<div class="col-sm-12 pt10px pb10px  pr10px pl10px">
+								<div class="info-box ">
+									<div class="icon iconText bg-grey2 pt8px">
+										<span id="ftBenf">--</span>
+									</div>
+									<div class="content">
+										<div class="txtLabel">Fund Transfered</div>
+									</div>
+								</div>
+							</div>
+
+							<div class="col-sm-12 pt10px pb10px  pr10px pl10px">
+								<div class="info-box">
+									<div class="icon iconText bg-grey3 pt8px" >
+										<span id="ftpBenf">--</span>
+									</div>
+									<div class="content">
+										<div class="txtLabel">Fund Transfer Pending</div>
+									</div>
+								</div>
+							</div>
+							<div class="col-sm-12 pt7px pb7px  pr10px pl10px">
+								<div class="info-box">
+									<div class="icon iconText bg-grey5 pt8px">
+										<span id="ftfBenf">--</span>
+									</div>
+									<div class="content">
+										<div class="txtLabel">Fund Transfer Failed</div>
+									</div>
+								</div>
+							</div>
+							
+						</div>
+					</div>
+				</div>
+			</div>
+<!-- Applications Beneficieries End -->
+
+<!-- Applications Fund  Start -->
+			<div class="col-sm-12 col-md-12 col-lg-3 col-xl-3 d-flex align-items-stretch">
+				<div class="card pl1px pr1px ml2px mr2px mb5px" style="width: 98%; ">
+					<div class="card-header card-header-primary card-header-icon" data-header-animation="true">
+						<div class="card-icon pt10px pr10px pb10px pl10px fs16px fwb">
+							<i class="far fa-coins"></i>
+							Fund Distribution 
+						</div>
+					</div>
+					
+					<div class="card-body pt10px pr10px pb20px pl10px" >
+						<div class="row">
+							<div class="col-sm-12 pt10px pb10px pr10px pl10px"> 
+								<div class="info-box" > 
+									<div class="icon iconText bg-grey1 pt8px" >
+									<i class="fad fa-rupee-sign fs14px"></i>
+									<span id="approvedAmt">--</span>
+									</div>
+									<div class="content">
+										<div class="txtLabel">Approved Amount</div>
+									</div>
+								</div>
+							</div>
+							<div class="col-sm-12 pt10px pb10px pr10px pl10px">
+								<div class="info-box ">
+									<div class="icon iconText bg-grey2 pt8px">
+									<i class="fad fa-rupee-sign fs14px"></i>
+										<span id="ftniAmt">--</span>
+									</div>
+									<div class="content">
+										<div class="txtLabel">Transfer Not Initiated Amount</div>
+									</div>
+								</div>
+							</div>
+							<div class="col-sm-12 pt10px pb10px pr10px pl10px">
+								<div class="info-box">
+									<div class="icon iconText bg-grey4 pt8px">
+									<i class="fad fa-rupee-sign fs14px"></i>
+										<span id="ftAmt">--</span>
+									</div>
+									<div class="content">
+										<div class="txtLabel">Transfered Amount</div>
+									</div>
+								</div>
+							</div>
+							<div class="col-sm-12 pt10px pb10px pr10px pl10px">
+								<div class="info-box">
+									<div class="icon iconText bg-grey5 pt8px" >
+									<i class="fad fa-rupee-sign fs14px"></i>
+										<span id="ftpAmt">--</span>
+									</div>
+									<div class="content">
+										<div class="txtLabel">Transfer Pending Amount</div>
+									</div>
+								</div>
+							</div>
+							<div class="col-sm-12 pt10px pb10px pr10px pl10px">
+								<div class="info-box">
+									<div class="icon iconText bg-grey3 pt8px" >
+									<i class="fad fa-rupee-sign fs14px"></i>
+										<span id="ftfAmt">--</span>
+									</div>
+									<div class="content">
+										<div class="txtLabel">Transfer Failed</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+<!-- Applications Information End -->
+
+<!-- Applications Information Start -->
+			<div class="col-sm-12 col-md-12 col-lg-3 col-xl-3 d-flex align-items-stretch">
+				<div class="card pl1px pr1px ml2px mr2px mb5px" style="width: 98%; ">
+					<div class="card-header card-header-primary card-header-icon" data-header-animation="true">
+						<div class="card-icon pt10px pr10px pb10px pl10px fs16px fwb">
+							<i class="far fa-book-dead"></i>
+							Collection And Culling Application  Wise
+						</div>
+					</div>
+					
+					<div class="card-body pt10px pr10px pb20px pl10px" >
+						<div class="row">
+							<div class="col-sm-12 pt10px pb10px pr10px pl10px">
+								<div class="info-box" > 
+									<div class="icon iconText bg-grey1 pt8px" >
+										<span id="psApp"></span>
+									</div>
+									<div class="content">
+										<div class="txtLabel">Pickup Scheduled Applications</div>
+									</div>
+								</div>
+							</div>
+							<div class="col-sm-12 pt7px pb7px pr10px pl10px">
+								<div class="info-box ">
+									<div class="icon iconText bg-grey2 pt8px">
+										<span id="spApp"></span>
+									</div>
+									<div class="content">
+										<div class="txtLabel">Schedule Pending Applications</div>
+									</div>
+								</div>
+							</div>
+
+							<div class="col-sm-12 pt7px pb7px pr10px pl10px">
+								<div class="info-box">
+									<div class="icon iconText bg-grey3 pt8px" >
+										<span id="ccApp"></span>
+									</div>
+									<div class="content">
+										<div class="txtLabel">Collection Completed Applications</div>
+									</div>
+								</div>
+							</div>
+							<div class="col-sm-12 pt7px pb7px pr10px pl10px">
+								<div class="info-box">
+									<div class="icon iconText bg-grey4 pt8px">
+										<span id="cpApp"></span>
+									</div>
+									<div class="content">
+										<div class="txtLabel">Collection Pending Applications</div>
+									</div>
+								</div>
+							</div>
+							<div class="col-sm-12 pt7px pb7px pr10px pl10px">
+								<div class="info-box">
+									<div class="icon iconText bg-grey5 pt8px" >
+										<span id="cucApp"></span>
+									</div>
+									<div class="content">
+										<div class="txtLabel">Culling Completed Applications</div>
+									</div>
+								</div>
+							</div>
+							<div class="col-sm-12 pt7px pb7px pr10px pl10px">
+								<div class="info-box">
+									<div class="icon iconText bg-grey2 pt8px" >
+										<span id="cupApp"></span>
+									</div>
+									<div class="content">
+										<div class="txtLabel">Culling Pending Applications</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+<!-- Applications Information End -->
+
+		<div class="col-sm-12 col-md-12 col-lg-3 col-xl-3 d-flex align-items-stretch">
+				<div class="card pl1px pr1px ml2px mr2px mb5px" style="width: 98%; ">
+					<div class="card-header card-header-primary card-header-icon" data-header-animation="true">
+						<div class="card-icon pt10px pr10px pb10px pl10px fs16px fwb">
+							<i class="fad fa-layer-group"></i>
+							Collection And Culling Pigs
+						</div>
+					</div>
+					
+					<div class="card-body pt10px pr10px pb20px pl10px" >
+						<div class="row">
+							<div class="col-sm-12 pt7px pb7px pr10px pl10px">
+								<div class="info-box" > 
+									<div class="icon iconText bg-grey1 pt8px" >
+									
+										<span id="psAni">--</span>
+									</div>
+									<div class="content">
+										<div class="txtLabel">Pickup Scheduled <i class="fad fa-pig pl5px fs18px" ></i></div>
+									</div>
+								</div>
+							</div>
+							<div class="col-sm-12 pt7px pb7px pr10px pl10px">
+								<div class="info-box ">
+									<div class="icon iconText bg-grey2 pt8px">
+										<span id="spAni"></span>
+									</div>
+									<div class="content">
+										<div class="txtLabel">Schedule Pending Animals <i class="fad fa-pig pl5px fs18px" ></i></div>
+									</div>
+								</div>
+							</div>
+
+							<div class="col-sm-12 pt7px pb7px pr10px pl10px">
+								<div class="info-box">
+									<div class="icon iconText bg-grey3 pt8px" >
+										<span id="ccAni"></span>
+									</div>
+									<div class="content">
+										<div class="txtLabel">Collection Completed <i class="fad fa-pig pl5px fs18px" ></i></div>
+									</div>
+								</div>
+							</div>
+							<div class="col-sm-12 pt7px pb7px pr10px pl10px">
+								<div class="info-box">
+									<div class="icon iconText bg-grey4 pt8px">
+										<span id="cpAni"></span>
+									</div>
+									<div class="content">
+										<div class="txtLabel">Collection Pending <i class="fad fa-pig pl5px fs18px" ></i></div>
+									</div>
+								</div>
+							</div>
+							<div class="col-sm-12 pt7px pb7px pr10px pl10px">
+								<div class="info-box">
+									<div class="icon iconText bg-grey5 pt8px" >
+										<span id="cucAni"></span>
+									</div>
+									<div class="content">
+										<div class="txtLabel">Culling Completed <i class="fad fa-pig pl5px fs18px" ></i></div>
+									</div>
+								</div>
+							</div>
+							<div class="col-sm-12 pt7px pb7px pr10px pl10px">
+								<div class="info-box">
+									<div class="icon iconText bg-grey2 pt8px" >
+										<span id="cupAni"></span>
+									</div>
+									<div class="content">
+										<div class="txtLabel">Culling Pending <i class="fad fa-pig pl5px fs18px" ></i></div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+<!-- Applications Information End -->
+
+			<div class="col-sm-12 col-md-12 col-lg-9 col-xl-9 d-flex align-items-stretch">
+				<div class="card mb5px pr10px" style="width: 100%; ">
+				
+				<div class="card-header card-header-info card-header-icon" data-header-animation="true">
+						<div class="card-icon pt10px pr10px pb10px pl10px fs16px fwb">
+							<i class="fas fa-analytics"></i>
+							Day Wise Application Process
+						</div>
+						<span class="card-success-right-icon">
+							<i class="fas fa-chart-bar"></i>
+						</span>
+					</div>
+					<div class="card-body"
+						style="padding: 5px 0px 0px 0px; min-height: 332px;">
+						<div id="containerApplicationChart"
+							style="height: 332px; margin: 0 auto;"></div>
+					</div>
+				</div>
+			</div>
+
+		</div>
+
+
+	</main>
+</body>
+
+</html>

@@ -1,0 +1,218 @@
+<div>
+	<form enctype="multipart/form-data"
+		th:action="@{/setup/saveInstitutionSetupDetails}" method="post">
+
+		<input type="hidden" th:field="*{institutions.fileStatus}" id="status">
+		<input type="hidden" th:field="*{institutions.id}" id="ids">
+
+		<div class="custom-control custom-radio">
+			<input type="radio" id="customRadio1" name="registrationRadio"
+				value="F" class="custom-control-input" checked="checked"
+				onchange="getForm()"> <label class="custom-control-label"
+				for="customRadio1">Adding By Form</label>
+		</div>
+		<!-- <div class="custom-control custom-radio">
+			<input type="radio" id="customRadio2" name="registrationRadio"
+				class="custom-control-input" value="P" onchange="getForm()">
+			<label class="custom-control-label" for="customRadio2">Adding
+				By porting</label>
+		</div>
+		<div id="port" class="p-2">
+			<label for="exampleInputEmail1">Attache File Here <br>(<small
+				class="text-danger font-italic"> Your file should be in .xls
+					format </small>)
+			</label><input type="file" id="my_file"
+				th:field="*{institutions.registrationForm}"
+				accept="application/vnd.ms-excel"
+				class="form-control form-control-sm">
+		</div> -->
+		<div class="col-sm-12">
+			<div id="form">
+				<div class="row">
+					<div class="col-sm-6">
+						<div id="form">
+							<div class="form-group">
+								<label for="exampleInputEmail1">Quarantine Institution
+									Type</label> <select class="custom-select" id="type"
+									th:field="*{institutions.type}" data-ng-model="type" required>
+									<option value="F1">F1</option>
+									<option value="F2">F2</option>
+									<option value="F3">F3</option>
+								</select>
+							</div>
+						</div>
+					</div>
+					<div class="col-sm-6">
+						<div id="form">
+							<div class="form-group">
+								<label for="exampleInputEmail1">Quarantine Institution
+									Name</label> <input th:field="*{institutions.name}" type="text"
+									id="name" class="form-control" aria-describedby="emailHelp"
+									placeholder="Enter Name">
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-sm-6">
+						<div id="form">
+							<div class="form-group">
+								<label for="exampleInputEmail1">Number of Rooms</label> <input
+									th:field="*{institutions.rooms}" type="text"
+									class="form-control number-only" id="room"
+									aria-describedby="emailHelp" placeholder="Number of Rooms">
+							</div>
+						</div>
+					</div>
+					<div class="col-sm-6">
+						<div id="form">
+							<div class="form-group">
+								<label for="exampleInputEmail1">District</label> <select
+									class="browser-default custom-select" id="districtid"
+									th:field="*{institutions.district.id}" required>
+									<option value="0">--Select--</option>
+									<option th:each="dist : ${nativedistricts}"
+										th:value="${dist.id}" th:text="${dist.districtName}"></option>
+								</select>
+							</div>
+						</div>
+					</div>
+				</div>
+
+
+				<div class="row">
+					<div class="col-sm-6">
+						<div id="form">
+							<div class="form-group">
+								<label for="exampleInputEmail1" class="text-gray-800">Screening
+									Center</label> <select class="browser-default custom-select"
+									id="screeningCenterid"
+									th:field="*{institutions.screeningCenter.id}" required>
+									<option value="0">--Select--</option>
+									<option th:each="screeningCenter : ${screeningCentersList}"
+										th:value="${screeningCenter.id}"
+										th:text="${screeningCenter.name}"></option>
+								</select>
+							</div>
+						</div>
+						<div class="col-sm-6"></div>
+					</div>
+				</div>
+
+				<div class="row">
+					<div class="col-sm-12">
+						<div id="form">
+							<div class="form-group">
+								<label for="exampleInputEmail1">Address</label> <input
+									th:field="*{institutions.address}" type="text"
+									class="form-control" id="exampleInputEmail1"
+									aria-describedby="emailHelp" placeholder="Enter Address">
+							</div>
+						</div>
+					</div>
+				</div>
+
+			</div>
+			<div class="row mt-4 mb-2">
+				<div class="col-sm-12 text-center" th:if='${institutions.id!=null}'>
+					<button style="text-align: center;" type="submit"
+						class="btn btn-sm btn-primary" onclick="return validateForm()">Update</button>
+				</div>
+				<div class="col-sm-12 text-center" th:if='${institutions.id==null}'>
+					<button style="text-align: center;" type="submit"
+						class="btn btn-sm btn-primary" onclick="return validateForm()">Register</button>
+				</div>
+			</div>
+	</form>
+</div>
+
+<script th:inline="javascript">
+	$(document)
+			.ready(
+					function() {
+						var radioValue = $(
+								"input[name='registrationRadio']:checked")
+								.val();
+						$('#status').val(radioValue);
+						if (radioValue == 'F') {
+							$('#port').hide();
+						}
+
+						$("#my_file")
+								.change(
+										function() {
+											var validExts = new Array(".xls");
+											var fileExt = $("#my_file").val();
+											fileExt = fileExt.substring(fileExt
+													.lastIndexOf('.'));
+											if (validExts.indexOf(fileExt) < 0) {
+												alert("Invalid file selected, valid files is of "
+														+ validExts.toString()
+														+ " types.");
+												$("#my_file").val("");
+												return false;
+											} else {
+												return true;
+											}
+										});
+
+					});
+	function getForm() {
+		var radioValue = $("input[name='registrationRadio']:checked").val();
+		$('#status').val(radioValue);
+		if (radioValue == 'F') {
+			$('#port').hide();
+			$('#form').show();
+		}
+		if (radioValue == 'P') {
+			$('#form').hide();
+			$('#port').show();
+		}
+	}
+	function isNumber(event) {
+		var numeric = new RegExp("^[0-9\b]+$");
+		var keyCode = String.fromCharCode(!event.charCode ? event.which
+				: event.charCode);
+		if (!numeric.test(keyCode)) {
+			event.preventDefault();
+			return false;
+		}
+	}
+	function validateForm() {
+		var radioValue = $("input[name='registrationRadio']:checked").val();
+		if (radioValue == "F") {
+			var applicantName = $("#name").val().trim();
+			if (applicantName == '' || applicantName == null) {
+				alert('Please enter the Quarantine Institution name');
+				$("#name").focus();
+				return false;
+			}
+			var applicantAge = $("#room").val().trim();
+			if (applicantAge == '' || applicantAge == null) {
+				alert('Please provide No Of Rooms');
+				$("#room").focus();
+				return false;
+			}
+			var presentDistrict = $("#districtid").val();
+			if (presentDistrict == 0 || presentDistrict == null) {
+				alert('Please choose the district');
+				$("#districtid").focus();
+				return false;
+			}
+			var presentDistrict = $("#type").val();
+			if (presentDistrict == 0 || presentDistrict == null) {
+				alert('Please choose the Quarantine Institution Type');
+				$("#type").focus();
+				return false;
+			}
+		}
+		if (radioValue == "P") {
+			var regFile = $("input[name='registrationForm']:first").val();
+			if (regFile == "") {
+				alert("Upload file...!")
+				return false;
+			}
+		}
+		return true;
+	}
+</script>

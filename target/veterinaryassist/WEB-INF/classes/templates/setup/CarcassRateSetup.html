@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html xmlns:layout="http://www.w3.org/1999/xhtml"
+	layout:decorate="~{layouts/layout}">
+<head>
+
+<title>Carcass Rate Setup</title>
+</head>
+
+<body>
+
+	<main role="main" class="container-fluid" layout:fragment="content">
+		<form id="callsForm">
+			<div class="row mt-3">
+				<div class="col-12 text-center">
+					<h6 class="font-weight-bold mt-1">Carcass Rate Setup</h6>
+				</div>
+			</div>
+
+			<div class="row">
+				<div class="col-6"></div>
+				<div class="col-6 text-right">
+					<button onclick="addNewCarcassRateSetup()" type="button" class="btn btn-warning btn-sm">
+					<i class="fa fa-plus "></i> Add
+					</button>
+
+					<!-- <button type="button" class="btn btn-warning btn-sm"
+						data-toggle="modal" data-target="#addNewModal">
+						<i class="fa fa-plus "></i> Add
+					</button> -->
+				</div>
+			</div>
+
+			<div class="row my-2">
+				<div class="col-12">
+					<table class="table table-sm table-bordered vertical-middle">
+						<tr class="thead-light">
+							<th width="5%" class="text-center p-2">#</th>
+							<th width="25%">Category of Destruction</th>
+							<th width="40%">Carcass Weight Classification</th>
+							<th width="15%" class="text-center p-2">Compensation Rate (Rs.)</th>
+							<th width="15%" class="text-center p-2"></th>
+						</tr>
+						<tr
+							th:if="carcassRateSetupList==null OR ${#lists.isEmpty(carcassRateSetupList)}">
+							<td colspan="6" class="text-center">-- No Details Found --</td>
+						</tr>
+						<tr th:if="${not #lists.isEmpty(carcassRateSetupList)}"
+							th:each="detail, status : ${carcassRateSetupList}"
+							th:id="${detail.id}" class="detailsRow">
+							<td class="text-center serialNo" th:text="${status.count+((pagination.pageNumber-1)*pagination.pageSize)}"></td>
+							<td><span
+								class="font-weight-bold text-primary cursor-pointer"
+								th:text="${detail.destructionCategory}"
+								th:attr="onclick=|editCarcassRateSetup('${detail.id}')|"
+								title="Click to edit the details"></span></td>
+							<td th:text="${#numbers.formatDecimal(detail.fromKg, 1, 'COMMA', 2, 'POINT')}+' kg - '+${#numbers.formatDecimal(detail.toKg, 1, 'COMMA', 2, 'POINT')}+' kg'"></td>
+							<td><span th:text="${#numbers.formatDecimal(detail.rate, 0, 'COMMA', 2, 'POINT')}">0.00</span></td>
+							<td class="text-center" th:switch="${detail.deleteStatus}">
+								<span th:case="'N'"><button type="button"
+										th:attr="onclick=|deleteCarcassRateSetup('${detail.id}')|"
+										class="btn btn-danger btn-circle btn-sm">Delete</button></span> <span
+								th:case="'Y'"><font color="red">Deleted</font></span>
+							</td>
+						</tr>
+					</table>
+				</div>
+			</div>
+			<div class="row mb-5" th:replace="fragments/pagination :: pagination">
+				<!-- PAGINATION -->
+			</div>
+
+			<div class="modal fade" id="registrationModal" tabindex="-1"
+				role="dialog" aria-labelledby="registrationModalLabel"
+				aria-hidden="true">
+				<div class="modal-dialog modal-lg" role="document">
+					<div class="modal-content">
+						<div class="modal-header">
+							<h5 class="modal-title" id="registrationModalLabel"></h5>
+							<button type="button" class="close" data-dismiss="modal"
+								aria-label="Close">
+								<span aria-hidden="true">&times;</span>
+							</button>
+						</div>
+						<div class="modal-body"></div>
+					</div>
+				</div>
+			</div>
+
+		</form>
+	</main>
+</body>
+</html>
+
+<script th:inline="javascript">
+	function addNewCarcassRateSetup() {
+		$('#registrationModalLabel').html('Add New Carcass Rate');
+		$('#registrationModal .modal-header').removeClass("bg-warning bg-danger text-black");
+		$('#registrationModal .modal-header').addClass("bg-info text-white");
+		$.ajax({
+			type : "GET",
+			url : "../setup/addNewCarcassRateSetup",
+			async : false,
+			beforeSend : function() {
+				$('#registrationModal .modal-body').html('Loading...');
+			},
+			success : function(result) {
+				$('#registrationModal .modal-body').html(result);
+			}
+		});
+
+		$('#registrationModal').modal('show');
+	}
+
+	function editCarcassRateSetup(id) {
+		$('#registrationModalLabel').html('Edit New Carcass Rate');
+		$('#registrationModal .modal-header').removeClass("bg-warning bg-danger text-black");
+		$('#registrationModal .modal-header').addClass("bg-info text-white");
+		$.ajax({
+			type : "GET",
+			url : "../setup/editNewCarcassRateSetup",
+			data : {
+				id : id
+			},
+			async : false,
+			beforeSend : function() {
+				$('#registrationModal .modal-body').html('Loading...');
+			},
+			success : function(result) {
+				$('#registrationModal .modal-body').html(result);
+			}
+		});
+
+		$('#registrationModal').modal('show');
+	}
+
+	function deleteCarcassRateSetup(id) {
+		if (confirm("Do you want to Deactivate?")) {
+			$.ajax({
+				type : "GET",
+				url : "../setup/deactivateCarcassRateSetup",
+				data : {
+					id : id
+				},
+				success : function(msg) {
+					window.location.reload()
+				}
+			});
+		}
+	}
+</script>

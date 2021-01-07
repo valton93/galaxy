@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html xmlns:layout="http://www.w3.org/1999/xhtml"
+	layout:decorate="~{layouts/layout}" xmlns:th="http://www.thymeleaf.org">
+<head>
+<title>Vet Cares - Application Details</title>
+<style>
+.something {
+  margin: 0 auto;
+  overflow: hidden;
+  position: relative;
+}
+.arrow-right {
+  background-color:#e3e3e3;
+  box-shadow: 0 0 3px 2px rgba(183, 180, 180, 0.8);
+  height: 100px;
+  left: -100px;
+  position: absolute;
+  top: -50px;
+  width: 100px;
+  
+  -webkit-transform: rotate(-45deg);
+.arrow-right span {
+  color: #f5f5f5;
+  font-family: sans-serif;
+  font-size: 1.005em;
+  left: 28px;
+  top: 78px;
+  position: absolute;
+  width: 80px;
+}
+.fontsize7{
+    font-size: 13px;
+}
+.h7 {
+    font-size: 10px;
+}
+.text-right{
+	text-align: right;
+}
+</style>
+</head>
+
+<body>
+	<main role="main" class="container-fluid" layout:fragment="content">
+	
+	
+		<form id="callsForm"  action="#"
+			th:action="@{/finance/getCompletedTransactionList}"
+			data-ng-app="screeningApp"
+			data-ng-controller="ScreeningController">
+			<div class="row mt-3">
+				<div class="col-12 text-center">
+					<h6 class="font-weight-bold mt-1">
+						Non Initiated&nbsp;-&nbsp;<i
+							class="text-uppercase" th:text="${session.userBean.userOffice}"></i>
+					</h6>
+				</div>
+			</div>
+			
+				
+				
+
+			<div class="row">
+				<div class="col-6">
+					<div class="input-group input-group-sm w-50">
+						<input type="text" class="form-control"
+							th:field="${pagination.pageSearch}"
+							placeholder="Reference Name"
+							aria-describedby="MaterialButton-addon2">
+						<div class="input-group-append">
+							<button id="MaterialButton-addon2"
+								class="btn btn-primary pageable searchelement" type="button">
+								<i class="fa fa-search"></i>
+							</button>
+						</div>
+					</div>
+				</div>
+			</div>
+	
+			<div class="row my-2">
+				<div class="col-12">
+					<table class="table table-sm table-bordered vertical-middle">
+						<tr class="thead-light">
+							<th width="3%" class="text-center p-2">#</th>
+							<th width="12%" class="p-2">Reference Name</th>
+							<th width="12%">Total Beneficiaries</th>
+							<th width="8%" class="text-center">Pending Transactions</th>
+							<th width="20%" class="text-center p-2">Successful Transactions</th>
+ 							<th width="8%" class="text-center p-2">Rejected Transactions</th>
+							<th width="10%" class="p-2"></th>
+						</tr>
+						<tr th:if="details==null OR ${#lists.isEmpty(details)}">
+							<td colspan="7" class="text-center">-- No Details Found --</td>
+						</tr>
+						<tr th:if="${not #lists.isEmpty(details)}"
+							th:each="detail, status : ${details}" th:id="${detail.id}"
+							class="detailsRow">
+							<td class="text-center serialNo" th:text="${status.count+((pagination.pageNumber-1)*pagination.pageSize)}"></td>
+							
+							<td><span
+								class="font-weight-bold text-primary cursor-pointer"
+								th:text="${detail.name}"
+								
+								></span> <br> <span
+								class="font-italic"
+								th:text="'dated '+${#dates.format(detail.reportDate, 'dd-MM-yyyy')}"></span>
+							</td>
+							<td class="text-center" th:text="${detail.noOfBeneficiery}"></td>
+							<td class="text-center" th:text="${detail.pendingCount}"></td>
+							<td class="text-center" th:text="${detail.successCount}"></td>
+							<td class="text-center" th:text="${detail.rejectCount}"></td>
+							<td class="text-center">
+							 <a th:href="@{/finance/gotoViewTransactionDetails/{id}(id=${detail.id})}"> 
+									<button type="button" class="btn btn-success btn-sm" >
+										V
+									</button>
+								</a> 
+									<!-- <a th:href="@{/report/generateFinanceInitiateTransactionReport/{id}(id=${detail.id})}">
+								<img th:src="@{/images/xls-img.png}" width="20" height="30" />
+								</a> -->
+							</td>
+						</tr>
+					</table>
+				</div>
+			</div>
+	
+			<div class="row mb-5"
+				th:if="${not #lists.isEmpty(details)}"
+				th:replace="fragments/pagination :: pagination">
+				<!-- PAGINATION -->
+			</div>
+		</form>
+		
+		
+		<div class="modal fade" id="applicationViewModal"
+			tabindex="-1" role="dialog" aria-labelledby="staticBackdropLabel"
+			aria-hidden="true">
+			<div class="modal-dialog modal-lg" role="document">
+				<div class="modal-content">
+					<div class="modal-header bg-light">
+						<h5 class="modal-title">Application Details</h5>
+						<button type="button" class="close" data-dismiss="modal"
+							aria-label="Close">
+							<span aria-hidden="true">&times;</span>
+						</button>
+					</div>
+					<div class="modal-body"></div>
+				</div>
+			</div>
+		</div>
+		
+	</main>
+	
+	<div class="modal fade" id="pleaseWaitDialog" role="dialog"
+		data-backdrop="static" data-keyboard="false">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h4 style="margin: 0px;">Processing...</h4>
+				</div>
+				<div class="modal-body">
+					<div class="progress progress-striped active">
+						<div class="progress-bar" style="width: 100%;"></div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+</body>
+
+</html>
+
+<script th:inline="javascript">
+	var myApp;
+	myApp = myApp || (function () {
+	    return {
+	        showPleaseWait: function() {
+	            $('#pleaseWaitDialog').modal('show');
+	        },
+	        hidePleaseWait: function () {
+	            $('#pleaseWaitDialog').modal('hide');
+	        },
+	    };
+	})();
+	
+	var application = angular.module('screeningApp', []);
+	application.controller('ScreeningController', function ($scope, $http, $compile) {
+		$scope.viewAppplicationDetails = function (detailsId) {
+			$.ajax({
+				type : "GET",
+				url : "../district/gotoApplicationDetailsView",
+				async : false,
+				data : {
+					detailsId: detailsId
+				},
+				beforeSend : function() {
+					$('#applicationViewModal .modal-body').html('Loading...');
+				},
+				success : function(result) {
+					$('#applicationViewModal .modal-body').html($compile(result)($scope));
+				}
+			});
+			$('#applicationViewModal').modal('show');
+		};
+	});
+	
+</script>

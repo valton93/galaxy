@@ -1,0 +1,99 @@
+@charset "UTF-8";
+
+/** 
+ * Default CSS Drop-Down Menu Theme
+ *
+ * @file		default.css
+ * @name		Default
+ * @version		0.1.1
+ * @type		transitional
+ * @browsers	Windows: IE7+, Opera7+, Firefox3+
+ *				Mac OS: Safari2+, Firefox3+
+ *
+ * @link		http://www.lwis.net/free-css-drop-down-menu
+ * @copyright	2008-2012 Live Web Initiatives, http://www.lwis.net
+ *
+ */
+
+/* -- Base drop-down styling -- */
+ul.dropdown {
+	font-weight: normal;
+	width: 100%;
+	margin: 8px 0px 0px 15px;
+}
+
+ul.dropdown li {
+	font-size: 12px;
+	padding: 7px 10px;
+	border-style: solid;
+	border-color: #fff #d9d9d9 #d9d9d9;
+	background-color: #e9ecef;
+	color: #000;
+	padding: 7px 10px;
+}
+
+ul.dropdown li.active {
+	background-color: #01458E;
+}
+
+ul.dropdown li a.active {
+	background-color: #01458E;
+	color: #fff;
+}
+
+ul.dropdown li a {
+	color: #000;
+}
+
+ul.dropdown li a:hover {
+	color: #fff;
+	text-decoration: none;
+}
+
+ul.dropdown li.hover, ul.dropdown li:hover, ul.dropdown li.on {
+	background-color: #2666AB;
+	color: #000;
+}
+
+/* -- level mark -- */
+ul.dropdown ul {
+	width: 160px;
+	margin-top: 0px;
+}
+
+ul.dropdown ul li {
+	font-weight: normal;
+}
+
+/* -- Supporting class `dir` -- */
+ul.dropdown *.dir {
+	padding-right: 20px;
+	background-image: url(../../../../images/default/nav-arrow-down.png);
+	background-position: 100% 250%;
+	background-repeat: no-repeat;
+	border: none;
+}
+
+/* -- Components override -- */
+ul.dropdown-horizontal ul *.dir {
+	padding-right: 15px;
+	background-image: url(../../../../images/default/nav-arrow-right.png);
+	background-position: 100% 50%;
+	background-repeat: no-repeat;
+}
+
+ul.dropdown-upward *.dir {
+	background-image: url(../../../../images/default/nav-arrow-top.png);
+}
+
+ul.dropdown-vertical *.dir, ul.dropdown-upward ul *.dir {
+	background-image: url(../../../../images/default/nav-arrow-right.png);
+}
+
+ul.dropdown-vertical-rtl *.dir, ul.dropdown-horizontal>li.dropdown-vertical-rtl ul *.dir
+	{
+	padding-right: 10px;
+	padding-left: 15px;
+	background-image: url(../../../../images/default/nav-arrow-left.png);
+	background-position: 2px 50%;
+}

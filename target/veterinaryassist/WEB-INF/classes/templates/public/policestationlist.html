@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+
+<select class="browser-default custom-select text-uppercase"
+											data-width="100%" data-live-search="true"
+											title="Select Nearest Police Station" id="nativePolice"
+											th:field="*{migrant.nativePolice.id}">
+												<option value="0">--Select--</option>
+												<option th:each="station : ${nativestations}"
+													th:value="${station.id}"
+													th:text="${station.policeStationName}"></option>
+										</select>
+</select>

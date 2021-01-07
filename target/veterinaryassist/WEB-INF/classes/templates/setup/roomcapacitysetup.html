@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html xmlns:layout="http://www.w3.org/1999/xhtml"
+	layout:decorate="~{layouts/layout}">
+<head>
+
+<title>Vet. CARES - CAPACITY</title>
+
+</head>
+
+<body>
+	<main role="main" class="container-fluid" layout:fragment="content">
+		<form id="callsForm" data-ng-app="screeningApp"
+			data-ng-controller="ScreeningController">
+
+			<div class="row justify-content-md-center">
+				<div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+					<div class="row mt-3">
+						<div class="col-12 text-center">
+							<h6 class="font-weight-bold mt-1">CAPACITY</h6>
+						</div>
+					</div>
+
+					<div class="card shadow-sm p-5 mt-3">
+						<div class="row cursor-pointer" id="roomCapacityHistoryIcon">
+							<div class="col-12 text-right">
+								<a th:href="@{#}"
+									th:attr="onclick=|showInstitutionRoomCapacityHistory('${institution.id}')|"
+									title="Capacity History">
+									<button type="button" class="btn btn-sm px-3 py-2">
+										<i class="fa fa-history fa-lg text-primary"></i>
+									</button>
+								</a>
+							</div>
+						</div>
+
+						<div class="row">
+							<div class="col-sm-12">
+								<div class="form-group">
+									<label for="labName" class="text-gray-800">NAME</label>
+									<div>
+										<h5 class="font-weight-bold text-uppercase" th:text="${institution.name}"></h5>
+									</div>
+								</div>
+							</div>
+						</div>
+
+						<div class="row">
+							<div class="col-sm-12">
+								<div class="form-group">
+									<label for="labAddress" class="text-gray-800">ADDRESS</label>
+									<div>
+										<span th:text="${institution.address}"></span>
+									</div>
+								</div>
+							</div>
+						</div>
+
+						<div class="row">
+							<div class="col-sm-12">
+								<div class="form-group">
+									<label for="labDistrict" class="text-gray-800">DISTRICT</label>
+									<div>
+										<span th:if="${institution.district!=null}"
+											th:text="${institution.district.districtName}"></span> <span
+											th:unless="${institution.district!=null}">--</span>
+									</div>
+								</div>
+							</div>
+						</div>
+
+						<div class="row">
+							<div class="col-sm-4">
+								<div class="form-group">
+									<label for="labDistrict" class="text-gray-800">TOTAL
+										CAPACITY</label>
+									<div>
+										<a
+											th:href="@{/setup/editInstitutionUserRoomCapacitySetup/{id}(id=${institution.id})}">
+											<span class="font-weight-bold text-primary cursor-pointer h5"
+											th:text="${institution.rooms}"
+											title="Click to edit the details"></span>
+										</a>
+									</div>
+								</div>
+							</div>
+
+							<div class="col-sm-4">
+								<div class="form-group">
+									<label for="labDistrict" class="text-gray-800">ALLOTTED</label>
+									<div>
+										<span class="font-weight-bold text-warning cursor-pointer h5"
+											th:text="${institution.allottedRooms}"></span>
+									</div>
+								</div>
+							</div>
+
+							<div class="col-sm-4">
+								<div class="form-group">
+									<label for="labDistrict" class="text-gray-800">BALANCE</label>
+									<div>
+										<span class="font-weight-bold text-success cursor-pointer h5"
+											th:text="${institution.rooms-institution.allottedRooms}"></span>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+
+				</div>
+			</div>
+
+			<div class="modal fade" id="historyModal" tabindex="-1" role="dialog"
+				aria-labelledby="historyModalLabel" aria-hidden="true">
+				<div class="modal-dialog modal-lg" role="document">
+					<div class="modal-content">
+						<div class="modal-header bg-light">
+							<h5 class="modal-title">History</h5>
+							<button type="button" class="close" data-dismiss="modal"
+								aria-label="Close">
+								<span aria-hidden="true">&times;</span>
+							</button>
+						</div>
+						<div class="modal-body"></div>
+					</div>
+				</div>
+			</div>
+		</form>
+	</main>
+</body>
+</html>
+
+<script th:inline="javascript">
+	function showInstitutionRoomCapacityHistory(id) {
+		$.ajax({
+			type : "GET",
+			url : "../setup/showInstitutionRoomCapacityHistory",
+			async : false,
+			data : {
+				id: id
+			},
+			beforeSend : function() {
+				$('#historyModal .modal-body').html('Loading...');
+			},
+			success : function(result) {
+				$('#historyModal .modal-body').html(result);
+			}
+		});
+		$('#historyModal').modal('show');
+	}
+</script>
