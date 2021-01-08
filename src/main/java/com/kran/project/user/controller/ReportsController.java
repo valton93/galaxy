@@ -1,95 +1,35 @@
 package com.kran.project.user.controller;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.text.DecimalFormat;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
-
 import javax.servlet.ServletContext;
-import javax.servlet.http.HttpSession;
 
-import org.apache.poi.ss.usermodel.Workbook;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.core.io.InputStreamResource;
-import org.springframework.data.domain.Sort;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.servlet.ModelAndView;
 
-import com.itextpdf.io.font.constants.StandardFonts;
-import com.itextpdf.kernel.colors.ColorConstants;
-import com.itextpdf.kernel.font.PdfFont;
-import com.itextpdf.kernel.font.PdfFontFactory;
-import com.itextpdf.kernel.geom.PageSize;
-import com.itextpdf.kernel.geom.Rectangle;
-import com.itextpdf.kernel.pdf.PdfDocument;
-import com.itextpdf.kernel.pdf.PdfWriter;
-import com.itextpdf.layout.Document;
-import com.itextpdf.layout.Style;
-import com.itextpdf.layout.borders.Border;
-import com.itextpdf.layout.borders.SolidBorder;
-import com.itextpdf.layout.element.Cell;
-import com.itextpdf.layout.element.Paragraph;
-import com.itextpdf.layout.element.Table;
-import com.itextpdf.layout.property.TextAlignment;
-import com.itextpdf.layout.property.UnitValue;
-import com.itextpdf.layout.property.VerticalAlignment;
-import com.kran.project.farmer.entities.AnimalDetails;
-import com.kran.project.farmer.entities.FarmerDetails;
-import com.kran.project.farmer.entities.repo.AnimalDetailsRepository;
 import com.kran.project.farmer.entities.repo.DistrictSetupRepository;
-import com.kran.project.farmer.entities.repo.FarmerDetailsRepository;
-import com.kran.project.report.service.CustomReportDetailsService;
-import com.kran.project.user.dto.FilterVO;
-import com.kran.project.user.entities.CullingCenterUsers;
-import com.kran.project.user.entities.DistrictUsers;
-import com.kran.project.user.entities.repo.CullingCenterUsersRepository;
 import com.kran.project.user.entities.repo.DistrictUsersRepository;
-import com.kran.project.utilities.CustomUtils;
-
 
 @Controller
 @RequestMapping("report")
 @Scope("prototype")
 public class ReportsController {
 	@Autowired
-	FarmerDetailsRepository farmerDetailsRepository;
-	@Autowired
-	AnimalDetailsRepository animalDetailsRepository;
-	@Autowired
 	DistrictSetupRepository districtSetupRepository;
 	@Autowired
 	DistrictUsersRepository districtUsersRepository;
-	@Autowired
-	CullingCenterUsersRepository cullingCenterUsersRepository;
-
-	
 
 	@Autowired
 	ServletContext servletContext;
 
-	
 	@GetMapping("generateEntryForm/{id}")
 	public ResponseEntity<InputStreamResource> generateEntryForm(@PathVariable Long id) throws Exception {
-		if (id != null && id > 0) {
+/*		if (id != null && id > 0) {
 			Optional<FarmerDetails> migrant = farmerDetailsRepository.findById(id);
 			if (migrant.isPresent()) {
 				FarmerDetails migrantDetail = migrant.get();
@@ -116,7 +56,7 @@ public class ReportsController {
 				fileName = "";
 				filePath = null;
 
-				/*** FILENAME ***/
+				*//*** FILENAME ***//*
 				if (migrantDetail.getMobile() != null) {
 					fileName += migrantDetail.getMobile();
 				} else {
@@ -126,7 +66,7 @@ public class ReportsController {
 				fileName += "_";
 				fileName += migrantDetail.getName().replaceAll("[^a-zA-Z0-9]", "");
 				fileName += "." + documentFormat;
-				/*** FILENAME ***/
+				*//*** FILENAME ***//*
 
 				filePath = Paths.get(destinationPath + File.separator + migrantDetail.getMobile());
 				if (!Files.exists(filePath)) {
@@ -1132,7 +1072,7 @@ public class ReportsController {
 				}
 			}
 		}
-
+*/
 		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
 	}
 	

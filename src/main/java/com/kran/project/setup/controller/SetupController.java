@@ -17,16 +17,10 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.kran.project.farmer.entities.repo.DistrictSetupRepository;
-import com.kran.project.farmer.entities.repo.FarmerDetailsRepository;
 import com.kran.project.farmer.entities.repo.StateSetupRepository;
 import com.kran.project.user.dto.Pagination;
 import com.kran.project.user.dto.Pagination.PageStatusConstants;
-import com.kran.project.user.entities.CarcassRateSetup;
-import com.kran.project.user.entities.CullingCenters;
 import com.kran.project.user.entities.DistrictUsers;
-import com.kran.project.user.entities.repo.CarcassRateSetupRepository;
-import com.kran.project.user.entities.repo.CullingCenterUsersRepository;
-import com.kran.project.user.entities.repo.CullingCentersRepository;
 import com.kran.project.user.entities.repo.DistrictUsersRepository;
 
 @Controller
@@ -40,80 +34,11 @@ public class SetupController {
 	DistrictSetupRepository districtSetupRepository;
 	@Autowired
 	DistrictUsersRepository  districtUsersRepository;
-	@Autowired
-	CullingCentersRepository cullingCentersRepository ;
-	@Autowired
-	CullingCenterUsersRepository cullingCenterUsersRepository ;
-	
-	@Autowired
-	FarmerDetailsRepository farmerDetailsRepository;
-	@Autowired
-	CarcassRateSetupRepository setupRepository;
 
 	private Map<String, String> fieldErrors;
 
 	
-	@RequestMapping(value = "getCarcassRateSetup", method = { RequestMethod.GET, RequestMethod.POST })
-	public ModelAndView getCarcassRateSetup(HttpSession session, Pagination pagination) {
-		session.setAttribute("tab", "settings");
-		session.setAttribute("subtab", "carcassratesetup");
 
-		ModelAndView modelAndView = new ModelAndView();
-		if ((pagination == null || pagination.getPageTotal() == 0) && !pagination.getPageStatus().equals(PageStatusConstants.fsearch.toString())) {
-			pagination = new Pagination();
-		}
-		if (pagination.getPageTotal() == 0 || pagination.getPageStatus().equals(PageStatusConstants.fsearch.toString())) {
-			pagination.setPageTotal(setupRepository.countOfCarcassRateSetup(pagination.getPageSearch()));
-		}
-		Pagination.updatePaginationAttributes(pagination);
-
-		List<CarcassRateSetup> carcassRateSetupList = null;
-		if (pagination.getPageTotal() > 0) {
-			PageRequest pageRequest = PageRequest.of(pagination.getPageNumber() - 1, pagination.getPageSize(), Sort.by("id").ascending());
-			carcassRateSetupList = setupRepository.findByCarcassRateSetupAll(pagination.getPageSearch(),pageRequest);
-			if (carcassRateSetupList != null) {
-				pagination.setCurrentPageSize(carcassRateSetupList.size());
-			}
-		}
-
-
-		//modelAndView.addObject("screeningCenters", screeningCenters);
-		modelAndView.addObject("pagination", pagination);
-		modelAndView.addObject("carcassRateSetupList", carcassRateSetupList);
-		//modelAndView.addObject("nativedistricts",districtSetupRepository.findByStateCodeId(18L, Sort.by("districtName")));
-		modelAndView.setViewName("setup/CarcassRateSetup");
-
-		return modelAndView;
-	}
-	@RequestMapping(value = "addNewCarcassRateSetup", method = { RequestMethod.GET, RequestMethod.POST })
-	public ModelAndView addNewCarcassRateSetup() {
-		ModelAndView modelAndView = new ModelAndView();
-		CarcassRateSetup carcassRateSetup = new CarcassRateSetup();
-		modelAndView.addObject("carcassRateSetup", carcassRateSetup);
-		modelAndView.setViewName("setup/AddNewCarcassRateSetup");
-		return modelAndView;
-	}
-
-	@RequestMapping(value = "editNewCarcassRateSetup", method = { RequestMethod.GET, RequestMethod.POST })
-	public ModelAndView editNewCarcassRateSetup(Long id) {
-		ModelAndView modelAndView = new ModelAndView();
-		CarcassRateSetup carcassRateSetup = setupRepository.findById(id).get();
-		modelAndView.addObject("carcassRateSetup", carcassRateSetup);
-		modelAndView.setViewName("setup/AddNewCarcassRateSetup");
-		return modelAndView;
-	}
-	@GetMapping("deactivateCarcassRateSetup")
-	public ModelAndView deactivateCarcassRateSetup(Long id) {
-		setupRepository.updateCarcassRateSetupDeleteStatus(id);
-		return new ModelAndView("redirect:/setup/getCarcassRateSetup");
-	}
-	
-	@RequestMapping(value = "saveCarcassRateSetup", method = { RequestMethod.GET, RequestMethod.POST })
-	public ModelAndView saveCarcassRateSetup(HttpSession session, CarcassRateSetup carcassRateSetup)	throws IOException {
-			carcassRateSetup.setDeleteStatus("N");
-			setupRepository.save(carcassRateSetup);
-		return new ModelAndView("redirect:/setup/getCarcassRateSetup");
-	}
 	
 	@RequestMapping(value = "getDistrictUserSetup", method = { RequestMethod.GET, RequestMethod.POST })
 	public ModelAndView getDistrictUserSetup(HttpSession session, Pagination pagination)	throws IOException {
@@ -123,10 +48,6 @@ public class SetupController {
 		if ((pagination == null || pagination.getPageTotal() == 0) && !pagination.getPageStatus().equals(PageStatusConstants.fsearch.toString())) {
 			pagination = new Pagination();
 		}
-		if (pagination.getPageTotal() == 0 || pagination.getPageStatus().equals(PageStatusConstants.fsearch.toString())) {
-			pagination.setPageTotal(setupRepository.countOfCarcassRateSetup(pagination.getPageSearch()));
-		}
-		Pagination.updatePaginationAttributes(pagination);
 
 		List<DistrictUsers> districtUsersList = null;
 		if (pagination.getPageTotal() > 0) {

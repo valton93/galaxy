@@ -5,22 +5,19 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
-import com.kran.project.farmer.entities.FarmerDetails;
 import com.kran.project.user.dao.CustomUserDetailsDAO;
 import com.kran.project.user.dto.FilterVO;
 import com.kran.project.user.dto.UserBean;
-import com.kran.project.user.entities.CullingCenterUsers;
 import com.kran.project.user.entities.DistrictUsers;
 import com.kran.project.user.entities.Users;
-import com.kran.project.user.entities.repo.CullingCenterUsersRepository;
 import com.kran.project.user.entities.repo.DistrictUsersRepository;
 import com.kran.project.user.entities.repo.UsersRepository;
 import com.kran.project.user.service.CustomUserDetailsService;
@@ -29,8 +26,6 @@ import com.kran.project.user.service.CustomUserDetailsService;
 public class CustomUserDetailsServiceImpl implements CustomUserDetailsService {
 	@Autowired
     UsersRepository usersLoginRepository;
-	@Autowired
-    CullingCenterUsersRepository cullingCenterUsersRepository;
 	@Autowired
 	DistrictUsersRepository districtUsersRepository;
 	
@@ -57,21 +52,7 @@ public class CustomUserDetailsServiceImpl implements CustomUserDetailsService {
 					return new User(username, user.getPassword(), new HashSet<GrantedAuthority>());
 				}
 			}
-			 else if (usernameAndDomain[1].equals("C")) {
-					Optional<CullingCenterUsers> optionalUser
-						= cullingCenterUsersRepository.findByUserName(usernameAndDomain[0]);
-					if (optionalUser.isPresent()) {
-						CullingCenterUsers user = optionalUser.get();
-						return new User(username, user.getPassword(), new HashSet<GrantedAuthority>());
-					}
-				}
-			 else if (usernameAndDomain[1].equals("F")) {
-					Optional<Users> optionalUser = usersLoginRepository.findByUserName(usernameAndDomain[0]);
-					if (optionalUser.isPresent()) {
-						Users user = optionalUser.get();
-						return new User(username, user.getPassword(), new HashSet<GrantedAuthority>());
-					}
-				}
+			 
 		}
 		
 		throw new UsernameNotFoundException("Invalid Username or Password.");
@@ -130,56 +111,6 @@ public class CustomUserDetailsServiceImpl implements CustomUserDetailsService {
     	return userBean;
     }
 
-	public List<FarmerDetails> getMigrantApplicantDetails(FilterVO filterVO) {
-		return customUserDetailsDAO.getMigrantApplicantDetails(filterVO);
-	}
 
-	public UserBean loadUserDetailsForCullingCenter(String username) {
-		UserBean userBean = null;
-    	Optional<CullingCenterUsers> optionalUser 
-    		= cullingCenterUsersRepository.findByUserName(username);
-		if (!optionalUser.isEmpty()) {
-			userBean = new UserBean();
-
-			CullingCenterUsers user = optionalUser.get();
-			userBean.setUserId(user.getId());
-			userBean.setUserDomain("C");
-			userBean.setUserOffice(user.getCenter().getName());
-			userBean.setDistrict(user.getCenter().getDistrict().getId());
-
-			userBean.setCullingCenterUser(user.getId());
-			userBean.setCullingCenter(user.getCenter().getId());
-			userBean.setName(user.getName());
-			
-			userBean.setCullingOfficerDEO(user.getDataEntryOperator());
-			userBean.setCullingOfficer(user.getCullingOfficer());
-			
-			userBean.setPasswordReset("Y");
-			userBean.setPasswordResetOn(new Date());
-		}
-		return userBean;
-	}
-	public UserBean loadUserDetailsForFinanceUser(String username) {
-		UserBean userBean = null;
-    	Optional<Users> optionalUser 
-    		= usersLoginRepository.findByUserName(username);
-    	
-		if (!optionalUser.isEmpty()) {
-			Users user = optionalUser.get();
-			userBean = new UserBean();
-			userBean.setUserId(user.getId());
-			userBean.setUserDomain("F");
-			userBean.setUserOffice(user.getName());
-
-			userBean.setAdministrator(user.getId());
-			userBean.setAdministrationUser(user.getAdministrator());
-			userBean.setFinanceManager(user.getFinanceManager());
-			userBean.setName(user.getName());
-			userBean.setPasswordReset("Y");
-			userBean.setPasswordResetOn(new Date());
-		}
-    	
-    	return userBean;
-    }
 
 }

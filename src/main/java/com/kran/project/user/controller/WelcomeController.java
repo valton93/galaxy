@@ -42,15 +42,6 @@ public class WelcomeController {
 			UserBean userBean= customUserDetailsService.loadUserDetailsForDistrict(usernameAndDomain[0]);
 			session.setAttribute("userBean", userBean);
 		}
-		else if (usernameAndDomain[1].equals("C")) {
-			UserBean userBean
-				= customUserDetailsService.loadUserDetailsForCullingCenter(usernameAndDomain[0]);
-			session.setAttribute("userBean", userBean);
-		}
-		else if (usernameAndDomain[1].equals("F")) {
-			UserBean userBean = customUserDetailsService.loadUserDetailsForFinanceUser(usernameAndDomain[0]);
-			session.setAttribute("userBean", userBean);
-		}
 
 		return new ModelAndView("redirect:/home");
 	}

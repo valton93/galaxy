@@ -20,10 +20,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.kran.project.user.dto.UserBean;
-import com.kran.project.user.entities.CullingCenterUsers;
 import com.kran.project.user.entities.DistrictUsers;
 import com.kran.project.user.entities.Users;
-import com.kran.project.user.entities.repo.CullingCenterUsersRepository;
 import com.kran.project.user.entities.repo.DistrictUsersRepository;
 import com.kran.project.user.entities.repo.UsersRepository;
 import com.kran.project.utilities.MessageService;
@@ -38,8 +36,6 @@ public class LoginController {
     UsersRepository usersLoginRepository;
 	@Autowired
     DistrictUsersRepository districtUsersRepository;
-	@Autowired
-    CullingCenterUsersRepository cullingCenterUsersRepository;
 	
 	@Value("${templates.forgotpassword}")
     private String templatesForgotPassword;
@@ -62,7 +58,6 @@ public class LoginController {
 			&& !userBean.getUserDomain().isBlank()) {
 			Users user = null;
 			DistrictUsers districtUsers = null;
-			CullingCenterUsers cullingCenterUsers = null;
 			
 			if (userBean.getUserDomain().equals("A")) {
 				Optional<Users> optionalUser
@@ -82,17 +77,6 @@ public class LoginController {
 					if (districtUsers.getMobile() != null) {
 						mobileNumber = String.valueOf(districtUsers.getMobile());
 						userId = districtUsers.getId();
-					}
-				}
-			}
-			else if (userBean.getUserDomain().equals("C")) {
-				Optional<CullingCenterUsers> optionalUser
-					= cullingCenterUsersRepository.findByUserName(userBean.getName());
-				if (optionalUser.isPresent()) {
-					cullingCenterUsers = optionalUser.get();
-					if (cullingCenterUsers.getMobile() != null) {
-						mobileNumber = String.valueOf(cullingCenterUsers.getMobile());
-						userId = cullingCenterUsers.getId();
 					}
 				}
 			}
@@ -125,10 +109,6 @@ public class LoginController {
 						} else if (userBean.getUserDomain().equals("D")) {
 							districtUsers.setOtp(generatedToken.toString());
 							districtUsersRepository.save(districtUsers);
-						} 
-						else if (userBean.getUserDomain().equals("C")) {
-							cullingCenterUsers.setOtp(generatedToken.toString());
-							cullingCenterUsersRepository.save(cullingCenterUsers);
 						} 
 						else if (userBean.getUserDomain().equals("F")) {
 							user.setOtp(generatedToken.toString());
@@ -183,14 +163,7 @@ public class LoginController {
 					userBean.setOtp(districtUsers.getOtp());
 				}
 			} 
-			else if (userDomain.equals("C")) {
-				Optional<CullingCenterUsers> optionalUser = cullingCenterUsersRepository.findById(userId);
-				if (optionalUser.isPresent()) {
-					CullingCenterUsers cullingCenterUsers = optionalUser.get();
-					userBean.setUserId(cullingCenterUsers.getId());
-					userBean.setOtp(cullingCenterUsers.getOtp());
-				}
-			}
+			
 			
 			modelAndView.addObject("userBean", userBean);
 			modelAndView.setViewName("/login/forgotpasswordconfirm");
@@ -230,17 +203,6 @@ public class LoginController {
 					districtUsersRepository.save(districtUsers);
 				}
 			}
-			 else if (userBean.getUserDomain().equals("C")) {
-					Optional<CullingCenterUsers> optionalUser = cullingCenterUsersRepository.findById(userBean.getUserId());
-					if (optionalUser.isPresent()) {
-						CullingCenterUsers cullingCenterUsers = optionalUser.get();
-						cullingCenterUsers.setPassword(new EncryptUsingDES().encrypt(userBean.getNewpassword()));
-						cullingCenterUsers.setPasswordReset("Y");
-						cullingCenterUsers.setPasswordResetOn(new Date());
-						cullingCenterUsers.setOtp(null);
-						cullingCenterUsersRepository.save(cullingCenterUsers);
-					}
-				}
 			
 			modelAndView.setViewName("redirect:/login/forgotPasswordSuccess");
 			return modelAndView;
@@ -270,7 +232,6 @@ public class LoginController {
 			&& !userBean.getUserDomain().isBlank()) {
 			Users user = null;
 			DistrictUsers districtUsers = null;
-			CullingCenterUsers cullingCenterUsers = null;
 			
 			if (userBean.getUserDomain().equals("A")) {
 				Optional<Users> optionalUser = usersLoginRepository.findById(userBean.getUserId());
@@ -290,16 +251,7 @@ public class LoginController {
 					}
 				}
 			}
-			else if (userBean.getUserDomain().equals("C")) {
-				Optional<CullingCenterUsers> optionalUser
-					= cullingCenterUsersRepository.findByUserName(userBean.getName());
-				if (optionalUser.isPresent()) {
-					cullingCenterUsers = optionalUser.get();
-					if (cullingCenterUsers.getMobile() != null) {
-						mobileNumber = String.valueOf(cullingCenterUsers.getMobile());
-					}
-				}
-			}
+		
 			else if (userBean.getUserDomain().equals("F")) {
 				Optional<Users> optionalUser
 				= usersLoginRepository.findByUserName(userBean.getName());
@@ -331,10 +283,6 @@ public class LoginController {
 						
 						userBean.setOtp(districtUsers.getOtp());
 					}
-					else if (userBean.getUserDomain().equals("C")) {
-						cullingCenterUsers.setOtp(generatedToken.toString());
-						cullingCenterUsersRepository.save(cullingCenterUsers);
-					} 
 					else if (userBean.getUserDomain().equals("F")) {
 						user.setOtp(generatedToken.toString());
 						usersLoginRepository.save(user);
@@ -392,17 +340,7 @@ public class LoginController {
 					districtUsersRepository.save(districtUsers);
 				}
 			} 
-			else if (userBean.getUserDomain().equals("C")) {
-				Optional<CullingCenterUsers> optionalUser = cullingCenterUsersRepository.findById(userBean.getUserId());
-				if (optionalUser.isPresent()) {
-					CullingCenterUsers cullingCenterUsers = optionalUser.get();
-					cullingCenterUsers.setPassword(new EncryptUsingDES().encrypt(userBean.getNewpassword()));
-					cullingCenterUsers.setPasswordReset("Y");
-					cullingCenterUsers.setPasswordResetOn(new Date());
-					cullingCenterUsers.setOtp(null);
-					cullingCenterUsersRepository.save(cullingCenterUsers);
-				}
-			}
+			
 			
 			modelAndView.setViewName("redirect:/login/updatePasswordSuccess");
 			return modelAndView;
